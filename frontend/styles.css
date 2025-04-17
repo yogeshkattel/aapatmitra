@@ -751,6 +751,7 @@ footer {
   flex: 1;
 }
 
+
 /* Media Queries */
 @media screen and (max-width: 991px) {
   .fa-bars, .fa-times   {
