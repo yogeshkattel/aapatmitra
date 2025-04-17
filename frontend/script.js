@@ -49,7 +49,17 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentSlide = 0;
   let slideInterval;
 
+  // Initialize first slide
+  const initializeSlider = () => {
+    if (slides.length > 0) {
+      slides[0].classList.add("active");
+      dots[0].classList.add("active");
+    }
+  };
+
   const updateSlides = (newIndex) => {
+    if (slides.length === 0) return;
+
     slides[currentSlide].classList.remove("active");
     dots[currentSlide].classList.remove("active");
     currentSlide = newIndex;
@@ -76,17 +86,21 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   // Event Listeners
-  prevBtn.addEventListener("click", () => {
-    stopSlideShow();
-    prevSlide();
-    startSlideShow();
-  });
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      stopSlideShow();
+      prevSlide();
+      startSlideShow();
+    });
+  }
 
-  nextBtn.addEventListener("click", () => {
-    stopSlideShow();
-    nextSlide();
-    startSlideShow();
-  });
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      stopSlideShow();
+      nextSlide();
+      startSlideShow();
+    });
+  }
 
   dots.forEach((dot, index) => {
     dot.addEventListener("click", () => {
@@ -98,10 +112,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Pause slideshow when hovering over testimonials
   const testimonialSection = document.getElementById("testimonials");
-  testimonialSection.addEventListener("mouseenter", stopSlideShow);
-  testimonialSection.addEventListener("mouseleave", startSlideShow);
+  if (testimonialSection) {
+    testimonialSection.addEventListener("mouseenter", stopSlideShow);
+    testimonialSection.addEventListener("mouseleave", startSlideShow);
+  }
 
-  // Start the slideshow
+  // Initialize slider and start slideshow
+  initializeSlider();
   startSlideShow();
 
   // Animate statistics counter
