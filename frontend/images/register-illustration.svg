@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500" height="400" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Elements -->
+    <circle cx="250" cy="200" r="150" fill="#E8F4FF" opacity="0.3"/>
+    <circle cx="100" cy="100" r="50" fill="#457B9D" opacity="0.1"/>
+    <circle cx="400" cy="300" r="70" fill="#1D3557" opacity="0.1"/>
+    
+    <!-- Helping Hands Symbol -->
+    <path d="M200 180 C 220 160, 240 160, 260 180" stroke="#457B9D" stroke-width="8" fill="none"/>
+    <path d="M240 180 C 260 160, 280 160, 300 180" stroke="#1D3557" stroke-width="8" fill="none"/>
+    
+    <!-- Document/Form Elements -->
+    <rect x="150" y="200" width="200" height="120" rx="10" fill="#457B9D"/>
+    <rect x="170" y="220" width="160" height="20" rx="5" fill="white"/>
+    <rect x="170" y="250" width="160" height="20" rx="5" fill="white"/>
+    <rect x="170" y="280" width="100" height="20" rx="5" fill="white"/>
+    
+    <!-- People Silhouettes -->
+    <circle cx="220" cy="150" r="20" fill="#1D3557"/>
+    <circle cx="280" cy="150" r="20" fill="#457B9D"/>
+    
+    <!-- Decorative Elements -->
+    <circle cx="150" cy="100" r="10" fill="#457B9D" opacity="0.5"/>
+    <circle cx="350" cy="100" r="10" fill="#1D3557" opacity="0.5"/>
+    <circle cx="150" cy="300" r="10" fill="#1D3557" opacity="0.5"/>
+    <circle cx="350" cy="300" r="10" fill="#457B9D" opacity="0.5"/>
+    
+    <!-- Abstract Connecting Lines -->
+    <path d="M150 100 Q 250 50 350 100" stroke="#457B9D" stroke-width="2" opacity="0.3"/>
+    <path d="M150 300 Q 250 350 350 300" stroke="#1D3557" stroke-width="2" opacity="0.3"/>
+    
+    <!-- Support Network Pattern -->
+    <circle cx="250" cy="200" r="100" stroke="#457B9D" stroke-width="1" stroke-dasharray="4 4" opacity="0.2"/>
+    <circle cx="250" cy="200" r="70" stroke="#1D3557" stroke-width="1" stroke-dasharray="4 4" opacity="0.2"/>
+</svg> 
