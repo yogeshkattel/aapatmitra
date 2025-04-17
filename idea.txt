@@ -1,0 +1,28 @@
+I am planning to make a online portal and app for victim rescue system.
+  There are many nepali foreign workers who get's stuck in foreign country  and get's exploited.
+  So our platform works as a information distribution system where people can instantly raise issues and ask for help.
+      which includes name, exact location, country, audio or video if possible.
+  we will have panel or any effective way for information relaying and faster reachability for different authorities like:
+    nepal police.
+    nepal embassy in foreign country (every country)
+    journalist
+    activist
+    Human Rights commission
+    Women rights commission
+    Nepali society groups of respected country (eg: UK society nepal) 
+  Features:
+    Instant notification to all the authorities.
+    Sms to all the authorities.
+    Location of victim in map if needed.
+    Contact victim (not video or audio call direct number call).
+    Victim can view how many authorities have noticed the complain raised  and also can see the response they made. (like a comment where they will tell or ask additional info)
+  Public Website:
+    How many Case solved.
+    How many Case pending.
+    Case status and information.
+    Credit to the authorities or collaborators.
+      Respective Authorities blogs and posts.
+      The authorities mentioned above can write blogs and posts and public can view them.
+  collaborations:
+    Ngo
+    Ingo
