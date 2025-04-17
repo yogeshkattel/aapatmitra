@@ -208,6 +208,7 @@ section {
   color: var(--secondary-color);
   cursor: pointer;
   display: none;
+  visibility: hidden;
 }
 
 /* Hero Section */
@@ -752,6 +753,9 @@ footer {
 
 /* Media Queries */
 @media screen and (max-width: 991px) {
+  .fa-bars, .fa-times   {
+    visibility:  visible;
+  }
   .hero-content h1 {
       font-size: 2.5rem;
   }
@@ -805,14 +809,12 @@ footer {
   .nav-links ul li {
       margin: 15px 0;
   }
-  
   .fa-times {
-      display: block;
-      position: absolute;
-      top: 20px;
-      right: 20px;
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    cursor: pointer;
+    display: none; /* Hidden by default */
   }
-  
   #hero .container {
       flex-direction: column;
       text-align: center;
@@ -843,11 +845,15 @@ footer {
   }
 }
 
+
+
 @media screen and (max-width: 576px) {
   .service-card, .stat-card {
       padding: 20px;
   }
-  
+  .fa-bars, .fa-times   {
+    visibility:  visible;
+  }
   .btn {
       padding: 10px 20px;
       font-size: 0.9rem;
@@ -877,3 +883,4 @@ footer {
       padding: 10px;
   }
 }
+
