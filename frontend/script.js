@@ -43,33 +43,66 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Testimonial Slider
   const slides = document.querySelectorAll(".testimonial-slide");
-  const dots = document.querySelectorAll(".dot");
+  const dots = document.querySelectorAll(".slider-dots .dot");
+  const prevBtn = document.querySelector(".slider-arrow.prev");
+  const nextBtn = document.querySelector(".slider-arrow.next");
   let currentSlide = 0;
+  let slideInterval;
 
-  function showSlide(index) {
-    slides.forEach((slide) => slide.classList.remove("active"));
-    dots.forEach((dot) => dot.classList.remove("active"));
+  const updateSlides = (newIndex) => {
+    slides[currentSlide].classList.remove("active");
+    dots[currentSlide].classList.remove("active");
+    currentSlide = newIndex;
+    slides[currentSlide].classList.add("active");
+    dots[currentSlide].classList.add("active");
+  };
 
-    slides[index].classList.add("active");
-    dots[index].classList.add("active");
-    currentSlide = index;
-  }
+  const nextSlide = () => {
+    const newIndex = (currentSlide + 1) % slides.length;
+    updateSlides(newIndex);
+  };
 
-  // Initialize dots click event
+  const prevSlide = () => {
+    const newIndex = (currentSlide - 1 + slides.length) % slides.length;
+    updateSlides(newIndex);
+  };
+
+  const startSlideShow = () => {
+    slideInterval = setInterval(nextSlide, 5000);
+  };
+
+  const stopSlideShow = () => {
+    clearInterval(slideInterval);
+  };
+
+  // Event Listeners
+  prevBtn.addEventListener("click", () => {
+    stopSlideShow();
+    prevSlide();
+    startSlideShow();
+  });
+
+  nextBtn.addEventListener("click", () => {
+    stopSlideShow();
+    nextSlide();
+    startSlideShow();
+  });
+
   dots.forEach((dot, index) => {
     dot.addEventListener("click", () => {
-      showSlide(index);
+      stopSlideShow();
+      updateSlides(index);
+      startSlideShow();
     });
   });
 
-  // Auto slide change
-  setInterval(() => {
-    let nextSlide = currentSlide + 1;
-    if (nextSlide >= slides.length) {
-      nextSlide = 0;
-    }
-    showSlide(nextSlide);
-  }, 5000);
+  // Pause slideshow when hovering over testimonials
+  const testimonialSection = document.getElementById("testimonials");
+  testimonialSection.addEventListener("mouseenter", stopSlideShow);
+  testimonialSection.addEventListener("mouseleave", startSlideShow);
+
+  // Start the slideshow
+  startSlideShow();
 
   // Animate statistics counter
   function animateCounters() {
