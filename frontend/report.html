@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aapatmitra - Report an Issue</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="container">
+          <div class="logo">
+            <h1><span class="highlight">Aapat</span>mitra</h1>
+          </div>
+          <div class="nav-links" id="navLinks">
+            <i class="fas fa-times" id="closeMenu"></i>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="index.html#services">Services</a></li>
+              <li><a href="index.html#about">About</a></li>
+              <li><a href="index.html#impact">Impact</a></li>
+              <li><a href="index.html#support">Support</a></li>
+              <li><a href="index.html#contact">Contact</a></li>
+              <li><a href="resources.html">Resources</a></li>
+            </ul>
+          </div>
+          <i class="fas fa-bars" id="openMenu"></i>
+        </div>
+      </nav>
+    </header>
+
+    <main class="report-page">
+      <div class="container">
+        <div class="page-header">
+          <h1>Report an Issue</h1>
+          <p class="description">
+            Please provide details about your situation. All information will be
+            kept confidential.
+          </p>
+        </div>
+
+        <form id="reportForm" class="report-form">
+          <div class="form-section">
+            <h2>Basic Information</h2>
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" required />
+            </div>
+            <div class="form-group">
+              <label for="country">Country</label>
+              <select id="country" name="country" required>
+                <option value="">Select Country</option>
+                <option value="kuwait">Kuwait</option>
+                <option value="qatar">Qatar</option>
+                <option value="saudi">Saudi Arabia</option>
+                <option value="uae">UAE</option>
+                <option value="malaysia">Malaysia</option>
+                <option value="south-korea">South Korea</option>
+                <option value="japan">Japan</option>
+                <option value="singapore">Singapore</option>
+                <option value="hong-kong">Hong Kong</option>
+                <option value="macau">Macau</option>
+                <option value="taiwan">Taiwan</option>
+                <option value="israel">Israel</option>
+                <option value="bahrain">Bahrain</option>
+                <option value="oman">Oman</option>
+                <option value="jordan">Jordan</option>
+                <option value="lebanon">Lebanon</option>
+                <option value="cyprus">Cyprus</option>
+                <option value="maldives">Maldives</option>
+                <option value="sri-lanka">Sri Lanka</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>Issue Details</h2>
+            <div class="form-group">
+              <label for="title">Issue Title</label>
+              <input type="text" id="title" name="title" required />
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea
+                id="description"
+                name="description"
+                rows="5"
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="emergency-level">Emergency Level</label>
+              <select id="emergency-level" name="emergency-level" required>
+                <option value="">Select Level</option>
+                <option value="low">Low - Non-urgent</option>
+                <option value="medium">Medium - Needs attention</option>
+                <option value="high">High - Urgent</option>
+                <option value="critical">
+                  Critical - Immediate action needed
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="priority">Priority</label>
+              <select id="priority" name="priority" required>
+                <option value="">Select Priority</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>Contact Information</h2>
+            <div class="form-group">
+              <label>Preferred Contact Method</label>
+              <div class="contact-methods">
+                <label class="contact-method">
+                  <input type="checkbox" name="contact-method" value="email" />
+                  <span>Email</span>
+                </label>
+                <label class="contact-method">
+                  <input
+                    type="checkbox"
+                    name="contact-method"
+                    value="whatsapp"
+                  />
+                  <span>WhatsApp</span>
+                </label>
+                <label class="contact-method">
+                  <input type="checkbox" name="contact-method" value="phone" />
+                  <span>Phone</span>
+                </label>
+                <label class="contact-method">
+                  <input
+                    type="checkbox"
+                    name="contact-method"
+                    value="telegram"
+                  />
+                  <span>Telegram</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" />
+            </div>
+            <div class="form-group">
+              <label for="whatsapp">WhatsApp Number</label>
+              <input type="tel" id="whatsapp" name="whatsapp" />
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>Additional Information</h2>
+            <div class="form-group">
+              <label for="evidence">Upload Evidence (Optional)</label>
+              <div class="file-upload">
+                <input
+                  type="file"
+                  id="evidence"
+                  name="evidence"
+                  accept="image/*,video/*,audio/*"
+                  multiple
+                />
+                <div class="upload-preview" id="uploadPreview"></div>
+              </div>
+              <p class="file-info">
+                You can upload images, videos, or audio files. Maximum size:
+                10MB per file.
+              </p>
+            </div>
+            <div class="form-group">
+              <label for="additional-info">Additional Information</label>
+              <textarea
+                id="additional-info"
+                name="additional-info"
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Submit Report</button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">
+            <h2><span class="highlight">Aapat</span>mitra</h2>
+            <p>Supporting Nepali workers worldwide</p>
+          </div>
+          <div class="footer-links">
+            <div class="footer-column">
+              <h3>Quick Links</h3>
+              <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#impact">Impact</a></li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h3>Resources</h3>
+              <ul>
+                <li><a href="resources.html">Emergency Contacts</a></li>
+                <li><a href="resources.html#guides">Guides & Handbooks</a></li>
+                <li><a href="resources.html#legal">Legal Resources</a></li>
+                <li><a href="resources.html#support">Support Services</a></li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h3>Legal</h3>
+              <ul>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Data Protection</a></li>
+                <li><a href="#">Cookie Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-social">
+            <h3>Connect With Us</h3>
+            <div class="social-icons">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+              <a href="#"><i class="fab fa-telegram"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Aapatmitra. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("reportForm");
+        const fileInput = document.getElementById("evidence");
+        const uploadPreview = document.getElementById("uploadPreview");
+
+        // Handle file upload preview
+        fileInput.addEventListener("change", function (e) {
+          uploadPreview.innerHTML = "";
+          const files = e.target.files;
+
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+              const preview = document.createElement("div");
+              preview.className = "preview-item";
+
+              if (file.type.startsWith("image/")) {
+                preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+              } else if (file.type.startsWith("video/")) {
+                preview.innerHTML = `<video controls><source src="${e.target.result}" type="${file.type}">Your browser does not support the video tag.</video>`;
+              } else if (file.type.startsWith("audio/")) {
+                preview.innerHTML = `<audio controls><source src="${e.target.result}" type="${file.type}">Your browser does not support the audio tag.</audio>`;
+              }
+
+              uploadPreview.appendChild(preview);
+            };
+
+            reader.readAsDataURL(file);
+          }
+        });
+
+        // Handle form submission
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Validate contact methods
+          const contactMethods = form.querySelectorAll(
+            'input[name="contact-method"]:checked'
+          );
+          if (contactMethods.length === 0) {
+            alert("Please select at least one contact method");
+            return;
+          }
+
+          // Here you would typically send the form data to your backend
+          console.log("Form submitted:", new FormData(form));
+          alert(
+            "Your report has been submitted successfully. We will contact you soon."
+          );
+          form.reset();
+          uploadPreview.innerHTML = "";
+        });
+      });
+    </script>
+  </body>
+</html>
