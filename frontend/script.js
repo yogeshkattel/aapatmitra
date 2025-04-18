@@ -124,10 +124,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // Animate statistics counter
   function animateCounters() {
     const counters = [
-      { id: "cases-resolved", target: 1247 },
-      { id: "countries-covered", target: 27 },
-      { id: "authorities-partnered", target: 52 },
-      { id: "response-time", target: 6 },
+      { id: "cases-resolved", target: 2500 },
+      { id: "countries-covered", target: 15 },
+      { id: "authorities-partnered", target: 50 },
+      { id: "response-time", target: 4 },
     ];
 
     counters.forEach((counter) => {
@@ -236,4 +236,105 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   window.addEventListener("scroll", updateActiveNavLink);
+
+  // Initialize the Auto-Animating Timeline
+  initAutoTimeline();
+
+  function initAutoTimeline() {
+    const timelinePoints = document.querySelectorAll(".timeline-point");
+    const processDetails = document.querySelectorAll(".process-detail");
+    const timelineSection = document.getElementById("how-it-works");
+
+    if (timelinePoints.length === 0) return;
+
+    let currentStep = 1;
+    const totalSteps = timelinePoints.length;
+    let timelineInterval;
+    const stepDuration = 4000; // 4 seconds per step
+
+    // Function to set active step
+    function setActiveStep(step) {
+      // Update timeline points
+      timelinePoints.forEach((point) => {
+        const pointStep = parseInt(point.getAttribute("data-step"));
+        point.classList.remove("active", "completed");
+
+        if (pointStep === step) {
+          point.classList.add("active");
+        } else if (pointStep < step) {
+          point.classList.add("completed");
+        }
+      });
+
+      // Update process details with fade effect
+      processDetails.forEach((detail) => {
+        if (parseInt(detail.getAttribute("data-step")) === step) {
+          // Fade out current active detail
+          document
+            .querySelectorAll(".process-detail.active")
+            .forEach((activeDetail) => {
+              activeDetail.style.opacity = "0";
+              setTimeout(() => {
+                activeDetail.classList.remove("active");
+                // Fade in new detail
+                detail.classList.add("active");
+                setTimeout(() => {
+                  detail.style.opacity = "1";
+                }, 50);
+              }, 500);
+            });
+        }
+      });
+
+      // Update current step
+      currentStep = step;
+    }
+
+    // Function to advance to next step or loop back to the first
+    function advanceStep() {
+      const nextStep = currentStep < totalSteps ? currentStep + 1 : 1;
+      setActiveStep(nextStep);
+    }
+
+    // Start the timeline animation when section is visible
+    const timelineObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Start the animation cycle
+            if (!timelineInterval) {
+              timelineInterval = setInterval(advanceStep, stepDuration);
+            }
+          } else {
+            // Pause animation when not in view
+            clearInterval(timelineInterval);
+            timelineInterval = null;
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    if (timelineSection) {
+      timelineObserver.observe(timelineSection);
+    }
+
+    // Pause animation on hover/touch
+    const timelineContainer = document.querySelector(".timeline-container");
+    if (timelineContainer) {
+      timelineContainer.addEventListener("mouseenter", () => {
+        clearInterval(timelineInterval);
+        timelineInterval = null;
+      });
+
+      timelineContainer.addEventListener("mouseleave", () => {
+        if (!timelineInterval) {
+          timelineInterval = setInterval(advanceStep, stepDuration);
+        }
+      });
+
+      // Remove click functionality from timeline points
+      // Timeline points are no longer clickable for manual navigation
+    }
+  }
 });

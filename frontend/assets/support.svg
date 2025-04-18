@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#trackGradient)" opacity="0.1"/>
+  
+  <!-- Phone Frame -->
+  <rect x="70" y="40" width="60" height="120" rx="10" fill="#4f46e5"/>
+  <rect x="73" y="43" width="54" height="114" rx="8" fill="white"/>
+  
+  <!-- Status Bars -->
+  <rect x="80" y="60" width="40" height="8" rx="4" fill="#818cf8" opacity="0.7"/>
+  <rect x="80" y="80" width="30" height="8" rx="4" fill="#818cf8" opacity="0.5"/>
+  <rect x="80" y="100" width="35" height="8" rx="4" fill="#818cf8" opacity="0.6"/>
+  
+  <!-- Checkmark Circle -->
+  <circle cx="100" cy="130" r="15" fill="#4f46e5"/>
+  <path d="M92 130L97 135L108 124" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Notification Dots -->
+  <circle cx="130" cy="70" r="8" fill="#8b5cf6">
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="trackGradient" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+</svg> 

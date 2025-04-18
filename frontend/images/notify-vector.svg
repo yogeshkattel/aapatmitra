@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="200" viewBox="0 0 240 200">
+  <style>
+    .primary { fill: #4f46e5; }
+    .secondary { fill: #f97316; }
+    .accent { fill: #8b5cf6; }
+    .light { fill: #f8fafc; }
+    .medium { fill: #e2e8f0; }
+    .dark { fill: #1e293b; }
+    .st0 { fill: #ffffff; }
+  </style>
+  <!-- Background shapes -->
+  <circle class="medium" cx="120" cy="100" r="85" opacity="0.3"/>
+  <circle class="light" cx="120" cy="100" r="75"/>
+  
+  <!-- Notification center -->
+  <g transform="translate(70, 40)">
+    <!-- Alert bell -->
+    <circle class="primary" cx="50" cy="50" r="40" opacity="0.8"/>
+    <path class="st0" d="M50,25 C40,25 32,33 32,43 L32,60 L25,67 L75,67 L68,60 L68,43 C68,33 60,25 50,25 Z M50,75 C53,75 56,72 56,69 L44,69 C44,72 47,75 50,75 Z" />
+    
+    <!-- Notification waves -->
+    <path class="accent" d="M50,15 C33,15 19,29 19,46 L24,46 C24,32 36,20 50,20 C64,20 76,32 76,46 L81,46 C81,29 67,15 50,15 Z" opacity="0.7"/>
+    <path class="accent" d="M50,5 C28,5 10,23 10,45 L15,45 C15,26 31,10 50,10 C69,10 85,26 85,45 L90,45 C90,23 72,5 50,5 Z" opacity="0.5"/>
+    
+    <!-- Notification dots -->
+    <circle class="secondary" cx="90" cy="30" r="10"/>
+    <path class="st0" d="M94,27 L90,34 L86,27 Z" />
+    
+    <circle class="secondary" cx="15" cy="75" r="12"/>
+    <rect class="st0" x="10" y="70" width="10" height="10" rx="2" ry="2"/>
+    
+    <circle class="accent" cx="95" cy="70" r="8"/>
+    <path class="st0" d="M91,70 L94,73 L99,68 L97,66 L94,69 L93,68 Z" />
+  </g>
+</svg> 
