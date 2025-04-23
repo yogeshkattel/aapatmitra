@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <!-- Background elements -->
+  <circle cx="400" cy="300" r="250" fill="#f0f7ff" opacity="0.6" />
+  <circle cx="350" cy="250" r="150" fill="#e4efff" opacity="0.4" />
+  
+  <!-- Customer service person -->
+  <g transform="translate(300, 200)">
+    <!-- Head -->
+    <circle cx="0" cy="0" r="50" fill="#f9d9c0" />
+    <path d="M-20,0 Q0,20 20,0" stroke="#333" stroke-width="2" fill="none" />
+    <circle cx="-15" cy="-10" r="5" fill="#333" />
+    <circle cx="15" cy="-10" r="5" fill="#333" />
+    
+    <!-- Headset -->
+    <path d="M-50,-10 Q-50,-50 0,-60 Q50,-50 50,-10" stroke="#4f46e5" stroke-width="6" fill="none" />
+    <rect x="-55" y="-15" width="12" height="25" rx="6" fill="#4f46e5" />
+    <rect x="43" y="-15" width="12" height="25" rx="6" fill="#4f46e5" />
+    <path d="M-52,-10 L-40,20" stroke="#4f46e5" stroke-width="4" fill="none" />
+    
+    <!-- Body -->
+    <path d="M-40,50 L0,150 L40,50" fill="#4f46e5" />
+    <rect x="-40" y="50" width="80" height="60" rx="5" fill="#4f46e5" />
+    
+    <!-- Arms -->
+    <path d="M-40,70 Q-80,90 -90,130" stroke="#4f46e5" stroke-width="15" fill="none" stroke-linecap="round" />
+    <path d="M40,70 Q80,90 90,130" stroke="#4f46e5" stroke-width="15" fill="none" stroke-linecap="round" />
+  </g>
+  
+  <!-- Communications elements -->
+  <g transform="translate(500, 230)">
+    <!-- Message bubbles -->
+    <rect x="0" y="0" width="120" height="60" rx="15" fill="#8b5cf6" />
+    <circle cx="0" cy="60" r="15" fill="#8b5cf6" />
+    <rect x="-50" y="100" width="100" height="50" rx="15" fill="#f97316" />
+    <circle cx="50" cy="100" r="15" fill="#f97316" />
+    
+    <!-- Icons in bubbles -->
+    <text x="60" y="40" font-family="Arial" font-size="30" fill="white" text-anchor="middle">?</text>
+    <text x="0" y="130" font-family="Arial" font-size="25" fill="white" text-anchor="middle">!</text>
+  </g>
+  
+  <!-- Laptop/device -->
+  <g transform="translate(200, 380)">
+    <rect x="0" y="0" width="120" height="80" rx="5" fill="#333" />
+    <rect x="5" y="5" width="110" height="70" rx="2" fill="#f8fafc" />
+    <rect x="-10" y="80" width="140" height="10" rx="5" fill="#333" />
+  </g>
+  
+  <!-- Connecting lines -->
+  <path d="M320,380 Q400,300 500,250" stroke="#4f46e5" stroke-width="3" fill="none" stroke-dasharray="5,5" />
+  <path d="M500,300 Q420,350 350,320" stroke="#f97316" stroke-width="3" fill="none" stroke-dasharray="5,5" />
+  
+  <!-- Decorative elements -->
+  <circle cx="150" cy="150" r="10" fill="#4f46e5" opacity="0.3" />
+  <circle cx="600" cy="180" r="15" fill="#f97316" opacity="0.3" />
+  <circle cx="200" cy="500" r="12" fill="#8b5cf6" opacity="0.3" />
+  <circle cx="650" cy="450" r="8" fill="#4f46e5" opacity="0.3" />
+</svg> 

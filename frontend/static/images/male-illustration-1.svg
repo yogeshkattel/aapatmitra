@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="100" fill="#4F46E5" opacity="0.1"/>
+  
+  <!-- Face -->
+  <circle cx="100" cy="85" r="40" fill="#4F46E5" opacity="0.2"/>
+  
+  <!-- Hair -->
+  <path d="M60 85C60 60 75 45 100 45C125 45 140 60 140 85C140 85 125 90 100 90C75 90 60 85 60 85Z" fill="#4F46E5" opacity="0.2"/>
+  
+  <!-- Features -->
+  <circle cx="85" cy="80" r="5" fill="#4F46E5"/>
+  <circle cx="115" cy="80" r="5" fill="#4F46E5"/>
+  <path d="M85 95C85 95 95 100 100 100C105 100 115 95 115 95" stroke="#4F46E5" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Shoulders -->
+  <path d="M60 160C60 160 80 150 100 150C120 150 140 160 140 160V200H60V160Z" fill="#4F46E5" opacity="0.1"/>
+  
+  <!-- Short Hair Details -->
+  <path d="M65 70C65 70 80 55 100 55C120 55 135 70 135 70" stroke="#4F46E5" stroke-width="3" opacity="0.2"/>
+</svg> 
