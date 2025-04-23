@@ -1,306 +1,430 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
-	// Mock reports data (in a real app, this would come from an API)
-	let reports = [
-		{
-			id: 'REP-001',
-			title: 'Working Condition Complaint',
-			description: 'Poor ventilation and excessive heat in worker accommodation.',
-			status: 'In Progress',
-			date: '2023-04-15',
-			country: 'Qatar',
-			category: 'Work Conditions',
-			priority: 'High'
-		},
-		{
-			id: 'REP-002',
-			title: 'Wage Issue Report',
-			description: 'Delayed payment of wages for three consecutive months.',
-			status: 'Resolved',
-			date: '2023-04-02',
-			country: 'UAE',
-			category: 'Wages',
-			priority: 'Medium'
-		},
-		{
-			id: 'REP-003',
-			title: 'Housing Condition Report',
-			description: 'Overcrowded housing conditions with inadequate facilities.',
-			status: 'Pending',
-			date: '2023-04-10',
-			country: 'Saudi Arabia',
-			category: 'Housing',
-			priority: 'High'
-		},
-		{
-			id: 'REP-004',
-			title: 'Contract Violation',
-			description: 'Employer forcing longer work hours than specified in contract.',
-			status: 'In Progress',
-			date: '2023-03-28',
-			country: 'Malaysia',
-			category: 'Legal',
-			priority: 'High'
-		},
-		{
-			id: 'REP-005',
-			title: 'Document Confiscation',
-			description: 'Employer has confiscated passport and identification documents.',
-			status: 'Urgent',
-			date: '2023-04-18',
-			country: 'Bahrain',
-			category: 'Legal',
-			priority: 'Critical'
-		},
-		{
-			id: 'REP-006',
-			title: 'Health Insurance Issue',
-			description: 'No access to promised health insurance coverage.',
-			status: 'Pending',
-			date: '2023-04-05',
-			country: 'Kuwait',
-			category: 'Healthcare',
-			priority: 'Medium'
-		}
-	];
+	let reports = [];
+	let loading = true;
+	let error = null;
+	let currentPage = 1;
+	let totalPages = 1;
+	let selectedReport = null;
+	let showModal = false;
 
-	let filters = {
-		status: 'All',
-		priority: 'All',
-		category: 'All'
+	const filters = {
+		emergencyLevel: '',
+		violenceType: '',
+		createdAt: ''
 	};
 
-	let filteredReports = [...reports];
+	const emergencyLevels = ['low', 'medium', 'high', 'critical'];
+	const violenceTypes = ['domestic'];
 
-	// Filter functions
-	function applyFilters() {
-		filteredReports = reports.filter((report) => {
-			if (filters.status !== 'All' && report.status !== filters.status) return false;
-			if (filters.priority !== 'All' && report.priority !== filters.priority) return false;
-			if (filters.category !== 'All' && report.category !== filters.category) return false;
-			return true;
-		});
-	}
-
-	// Get unique values for filter dropdowns
-	function getUniqueValues(field) {
-		return ['All', ...new Set(reports.map((report) => report[field]))];
-	}
-
-	let statusOptions = [];
-	let priorityOptions = [];
-	let categoryOptions = [];
-
-	onMount(() => {
-		statusOptions = getUniqueValues('status');
-		priorityOptions = getUniqueValues('priority');
-		categoryOptions = getUniqueValues('category');
-	});
-
-	// Watch for filter changes
-	$: {
-		if (filters) {
-			applyFilters();
+	// Get appropriate color for emergency level
+	function getEmergencyLevelColor(level) {
+		switch (level) {
+			case 'low':
+				return 'bg-green-100 text-green-800';
+			case 'medium':
+				return 'bg-yellow-100 text-yellow-800';
+			case 'high':
+				return 'bg-orange-100 text-orange-800';
+			case 'critical':
+				return 'bg-red-100 text-red-800';
+			default:
+				return 'bg-gray-100 text-gray-800';
 		}
 	}
+
+	async function fetchReports() {
+		loading = true;
+		error = null;
+
+		try {
+			const token = browser ? localStorage.getItem('token') : null;
+			if (!token) throw new Error('No authentication token found');
+
+			const API_BASE_URL = 'http://127.0.0.1:8000';
+			const query = new URLSearchParams({
+				page: currentPage.toString(),
+				limit: '10',
+				sort: 'createdAt',
+				order: 'DESC'
+			});
+
+			// Conditionally add non-empty filters
+			const activeFilters: Record<string, string> = {};
+			if (filters.emergencyLevel) activeFilters.emergencyLevel = filters.emergencyLevel;
+			if (filters.violenceType) activeFilters.violenceType = filters.violenceType;
+			if (filters.createdAt) activeFilters.createdAt = filters.createdAt;
+
+			if (Object.keys(activeFilters).length > 0) {
+				query.append('filters', JSON.stringify(activeFilters));
+			}
+
+			const response = await fetch(`${API_BASE_URL}/reports?${query}`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${token}`,
+					Accept: 'application/json'
+				},
+				mode: 'cors',
+				cache: 'no-store'
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const result = await response.json();
+			if (result.success) {
+				reports = result.data;
+				totalPages = Math.ceil(result.total / 10);
+			} else {
+				error = result.message || 'Failed to load reports';
+			}
+		} catch (err) {
+			console.error('Error fetching reports:', err);
+			error = 'Failed to fetch reports. Please try again.';
+		} finally {
+			loading = false;
+		}
+	}
+
+	function applyFilters() {
+		currentPage = 1;
+		fetchReports();
+	}
+
+	function goToPage(page) {
+		if (page < 1 || page > totalPages) return;
+		currentPage = page;
+		fetchReports();
+	}
+
+	function viewReport(report) {
+		selectedReport = report;
+		showModal = true;
+	}
+
+	function closeModal() {
+		showModal = false;
+		selectedReport = null;
+	}
+
+	onMount(() => {
+		if (browser) {
+			fetchReports();
+		}
+	});
 </script>
 
-<div class="container mx-auto px-4 py-8">
-	<div class="mb-8">
-		<h1 class="text-2xl font-bold text-gray-800">Reports</h1>
-		<p class="mt-2 text-gray-600">Manage and track all your submitted reports</p>
-	</div>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-6">
+	<div class="container mx-auto px-4">
+		<h1 class="mb-6 text-3xl font-bold text-indigo-800">Reports Dashboard</h1>
 
-	<!-- Filters -->
-	<div class="mb-6 rounded-lg bg-white p-4 shadow">
-		<div class="grid grid-cols-1 gap-4 md:grid-cols-4">
-			<div>
-				<label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-				<select
-					id="status"
-					bind:value={filters.status}
-					class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-				>
-					{#each statusOptions as option}
-						<option value={option}>{option}</option>
-					{/each}
-				</select>
-			</div>
+		<!-- Filter Section -->
+		<div class="mb-8 rounded-xl bg-white p-6 shadow-lg">
+			<h2 class="mb-4 text-xl font-semibold text-gray-800">Filters</h2>
+			<div class="flex flex-wrap items-center gap-4">
+				<div class="flex-1">
+					<label class="block text-sm font-medium text-gray-700">Emergency Level</label>
+					<select
+						bind:value={filters.emergencyLevel}
+						class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 px-3 py-2 shadow-sm transition-all focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+						on:change={applyFilters}
+					>
+						<option value="">All</option>
+						{#each emergencyLevels as level}
+							<option value={level}>{level}</option>
+						{/each}
+					</select>
+				</div>
 
-			<div>
-				<label for="priority" class="block text-sm font-medium text-gray-700">Priority</label>
-				<select
-					id="priority"
-					bind:value={filters.priority}
-					class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-				>
-					{#each priorityOptions as option}
-						<option value={option}>{option}</option>
-					{/each}
-				</select>
-			</div>
+				<div class="flex-1">
+					<label class="block text-sm font-medium text-gray-700">Violence Type</label>
+					<select
+						bind:value={filters.violenceType}
+						class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 px-3 py-2 shadow-sm transition-all focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+						on:change={applyFilters}
+					>
+						<option value="">All</option>
+						{#each violenceTypes as type}
+							<option value={type}>{type}</option>
+						{/each}
+					</select>
+				</div>
 
-			<div>
-				<label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-				<select
-					id="category"
-					bind:value={filters.category}
-					class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-				>
-					{#each categoryOptions as option}
-						<option value={option}>{option}</option>
-					{/each}
-				</select>
-			</div>
-
-			<div class="flex items-end">
-				<button
-					type="button"
-					class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-					on:click={() => {
-						filters = {
-							status: 'All',
-							priority: 'All',
-							category: 'All'
-						};
-					}}
-				>
-					Reset Filters
-				</button>
+				<div class="flex-1">
+					<label class="block text-sm font-medium text-gray-700">Created At</label>
+					<input
+						type="date"
+						bind:value={filters.createdAt}
+						class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 px-3 py-2 shadow-sm transition-all focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+						on:change={applyFilters}
+					/>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<!-- Create New Report Button -->
-	<div class="mb-6">
-		<button
-			type="button"
-			class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-		>
-			<svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-			</svg>
-			Create New Report
-		</button>
-	</div>
-
-	<!-- Reports Grid -->
-	{#if filteredReports.length === 0}
-		<div class="flex h-40 items-center justify-center rounded-lg bg-gray-50">
-			<p class="text-gray-500">No reports match your current filters.</p>
-		</div>
-	{:else}
-		<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			{#each filteredReports as report}
-				<div class="report-card overflow-hidden rounded-lg bg-white shadow">
-					<div class="p-5">
-						<div class="flex items-center justify-between">
-							<span class="text-xs font-medium text-gray-500">{report.id}</span>
-							{#if report.status === 'Resolved'}
-								<span
-									class="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800"
-								>
-									{report.status}
-								</span>
-							{:else if report.status === 'In Progress'}
-								<span class="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
-									{report.status}
-								</span>
-							{:else if report.status === 'Urgent'}
-								<span class="rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800">
-									{report.status}
-								</span>
-							{:else}
-								<span
-									class="rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800"
-								>
-									{report.status}
-								</span>
-							{/if}
-						</div>
-
-						<h3 class="mt-2 text-lg font-medium text-gray-900">{report.title}</h3>
-						<p class="mt-1 line-clamp-2 text-sm text-gray-600">{report.description}</p>
-
-						<div class="mt-4 flex flex-wrap gap-2">
-							<span
-								class="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800"
-							>
-								{report.category}
-							</span>
-
-							{#if report.priority === 'Critical'}
-								<span
-									class="inline-flex items-center rounded-md bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800"
-								>
-									{report.priority}
-								</span>
-							{:else if report.priority === 'High'}
-								<span
-									class="inline-flex items-center rounded-md bg-orange-100 px-2.5 py-0.5 text-xs font-medium text-orange-800"
-								>
-									{report.priority}
-								</span>
-							{:else}
-								<span
-									class="inline-flex items-center rounded-md bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"
-								>
-									{report.priority}
-								</span>
-							{/if}
-						</div>
-
-						<div class="mt-3 flex items-center text-sm text-gray-500">
-							<svg class="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-								/>
-							</svg>
-							{report.date}
-						</div>
-
-						<div class="mt-1 flex items-center text-sm text-gray-500">
-							<svg class="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
-							{report.country}
-						</div>
-
-						<div class="mt-4 border-t border-gray-100 pt-4">
-							<a
-								href={`/dashboard/reports/${report.id}`}
-								class="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-							>
-								View details →
-							</a>
+		<!-- Table View -->
+		{#if loading}
+			<div class="flex items-center justify-center p-8">
+				<div
+					class="border-b-3 border-t-3 h-14 w-14 animate-spin rounded-full border-indigo-600"
+				></div>
+				<span class="ml-4 text-lg text-indigo-800">Loading reports...</span>
+			</div>
+		{:else if error}
+			<div class="mb-6 rounded-md bg-red-50 p-4 shadow-md">
+				<div class="flex">
+					<div class="flex-shrink-0">
+						<svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+							<path
+								fill-rule="evenodd"
+								d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+								clip-rule="evenodd"
+							/>
+						</svg>
+					</div>
+					<div class="ml-3">
+						<h3 class="text-sm font-medium text-red-800">Error</h3>
+						<div class="mt-2 text-sm text-red-700">
+							<p>{error}</p>
 						</div>
 					</div>
 				</div>
-			{/each}
-		</div>
-	{/if}
+			</div>
+		{:else}
+			<div class="overflow-hidden rounded-xl bg-white shadow-xl">
+				<table class="min-w-full">
+					<thead class="bg-gradient-to-r from-indigo-600 to-purple-600">
+						<tr>
+							<th
+								scope="col"
+								class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white"
+							>
+								Name
+							</th>
+							<th
+								scope="col"
+								class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white"
+							>
+								Country
+							</th>
+							<th
+								scope="col"
+								class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white"
+							>
+								Issue
+							</th>
+							<th
+								scope="col"
+								class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white"
+							>
+								Location
+							</th>
+							<th
+								scope="col"
+								class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white"
+							>
+								Emergency Level
+							</th>
+							<th
+								scope="col"
+								class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white"
+							>
+								Violence Type
+							</th>
+							<th
+								scope="col"
+								class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white"
+							>
+								Contact
+							</th>
+							<th
+								scope="col"
+								class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white"
+							>
+								Created At
+							</th>
+							<th
+								scope="col"
+								class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white"
+							>
+								Actions
+							</th>
+						</tr>
+					</thead>
+					<tbody class="divide-y divide-gray-200">
+						{#each reports as report, i}
+							<tr class="transition-colors hover:bg-indigo-50">
+								<td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900"
+									>{report.name}</td
+								>
+								<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{report.country}</td>
+								<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{report.issue}</td>
+								<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{report.location}</td>
+								<td class="whitespace-nowrap px-6 py-4 text-sm">
+									<span
+										class="inline-flex rounded-full px-2 py-1 text-xs font-semibold {getEmergencyLevelColor(
+											report.emergencyLevel
+										)}"
+									>
+										{report.emergencyLevel}
+									</span>
+								</td>
+								<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600"
+									>{report.violenceType}</td
+								>
+								<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+									{report.contactType} - {report.contactValue}
+								</td>
+								<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+									{new Date(report.createdAt).toLocaleDateString()}
+								</td>
+								<td class="whitespace-nowrap px-6 py-4 text-sm">
+									<button
+										on:click={() => viewReport(report)}
+										class="rounded-md bg-indigo-600 px-3 py-1 text-sm font-medium text-white shadow-sm transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
+									>
+										View
+									</button>
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+
+			<div class="mt-8 flex justify-between">
+				<button
+					on:click={() => goToPage(currentPage - 1)}
+					disabled={currentPage === 1}
+					class="rounded-md bg-gradient-to-r from-indigo-500 to-indigo-600 px-5 py-2 text-sm font-medium text-white shadow-lg transition-all hover:from-indigo-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+				>
+					Previous
+				</button>
+				<div class="text-center">
+					<span class="rounded-md bg-indigo-100 px-4 py-2 font-medium text-indigo-800">
+						Page {currentPage} of {totalPages}
+					</span>
+				</div>
+				<button
+					on:click={() => goToPage(currentPage + 1)}
+					disabled={currentPage === totalPages}
+					class="rounded-md bg-gradient-to-r from-indigo-500 to-indigo-600 px-5 py-2 text-sm font-medium text-white shadow-lg transition-all hover:from-indigo-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+				>
+					Next
+				</button>
+			</div>
+		{/if}
+
+		<!-- Modal for Report Details -->
+		{#if showModal && selectedReport}
+			<div
+				class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75 backdrop-blur-sm transition-opacity"
+			>
+				<div
+					class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all"
+				>
+					<div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4">
+						<div class="flex items-center justify-between">
+							<h3 class="text-xl font-bold text-white">Report Details</h3>
+							<button
+								on:click={closeModal}
+								class="rounded-full bg-white bg-opacity-20 p-1 text-white transition-colors hover:bg-opacity-30"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									class="h-6 w-6"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M6 18L18 6M6 6l12 12"
+									/>
+								</svg>
+							</button>
+						</div>
+					</div>
+
+					<div class="divide-y divide-gray-200 px-6 py-5">
+						<div class="pb-3">
+							<p class="text-sm text-gray-500">Personal Information</p>
+							<div class="mt-2 grid grid-cols-2 gap-4">
+								<div>
+									<p class="text-sm font-medium text-gray-500">Name</p>
+									<p class="mt-1 text-base font-medium text-gray-900">{selectedReport.name}</p>
+								</div>
+								<div>
+									<p class="text-sm font-medium text-gray-500">Country</p>
+									<p class="mt-1 text-base text-gray-900">{selectedReport.country}</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="py-3">
+							<p class="text-sm text-gray-500">Incident Details</p>
+							<div class="mt-2 grid grid-cols-2 gap-4">
+								<div>
+									<p class="text-sm font-medium text-gray-500">Issue</p>
+									<p class="mt-1 text-base text-gray-900">{selectedReport.issue}</p>
+								</div>
+								<div>
+									<p class="text-sm font-medium text-gray-500">Location</p>
+									<p class="mt-1 text-base text-gray-900">{selectedReport.location}</p>
+								</div>
+								<div>
+									<p class="text-sm font-medium text-gray-500">Emergency Level</p>
+									<p class="mt-1">
+										<span
+											class="inline-flex rounded-full px-2 py-1 text-xs font-semibold {getEmergencyLevelColor(
+												selectedReport.emergencyLevel
+											)}"
+										>
+											{selectedReport.emergencyLevel}
+										</span>
+									</p>
+								</div>
+								<div>
+									<p class="text-sm font-medium text-gray-500">Violence Type</p>
+									<p class="mt-1 text-base text-gray-900">{selectedReport.violenceType}</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="py-3">
+							<p class="text-sm text-gray-500">Contact Information</p>
+							<div class="mt-2">
+								<p class="text-sm font-medium text-gray-500">Contact Method</p>
+								<p class="mt-1 text-base text-gray-900">
+									{selectedReport.contactType} - {selectedReport.contactValue}
+								</p>
+							</div>
+						</div>
+
+						<div class="pt-3">
+							<p class="text-sm font-medium text-gray-500">Created At</p>
+							<p class="mt-1 text-base text-gray-900">
+								{new Date(selectedReport.createdAt).toLocaleString()}
+							</p>
+						</div>
+					</div>
+
+					<div class="bg-gray-50 px-6 py-4">
+						<button
+							on:click={closeModal}
+							class="w-full rounded-md bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-2 text-center font-medium text-white shadow-md transition-all hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+						>
+							Close
+						</button>
+					</div>
+				</div>
+			</div>
+		{/if}
+	</div>
 </div>
-
-<style>
-	.report-card {
-		transition:
-			transform 0.2s,
-			box-shadow 0.2s;
-	}
-
-	.report-card:hover {
-		transform: translateY(-3px);
-		box-shadow:
-			0 10px 15px -3px rgba(0, 0, 0, 0.1),
-			0 4px 6px -2px rgba(0, 0, 0, 0.05);
-	}
-</style>
