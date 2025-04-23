@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Issue Tracking Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Temporary Access</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Please enter your information to access your report status.</p>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="login-name">Full Name</label>
+            <input type="text" id="login-name" name="login-name" required>
+          </div>
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" name="login-email" required>
+          </div>
+          <div class="form-group">
+            <label for="login-report-id">Report ID</label>
+            <input type="text" id="login-report-id" name="login-report-id" required>
+            <p class="help-text">Your Report ID was sent to your email when you submitted your report.</p>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Access Dashboard</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main Dashboard -->
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <img src="https://img.freepik.com/premium-vector/3d-realistic-person-people-vector-illustration_156780-142.jpg?ga=GA1.1.1116178273.1744995404&semt=ais_hybrid&w=740" alt="Logo">
+          <h2>Issue Tracker</h2>
+        </div>
+        <button id="sidebar-toggle" class="sidebar-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      
+      <div class="user-info">
+        <div class="user-avatar">
+          <img src="https://img.freepik.com/free-vector/flat-style-woman-avatar_90220-2876.jpg?ga=GA1.1.1116178273.1744995404&semt=ais_hybrid&w=740" alt="User Avatar">
+        </div>
+        <div class="user-details">
+          <h3 id="user-name">Guest User</h3>
+          <p id="user-role">Temporary Access</p>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li class="active">
+            <a href="#dashboard"><i class="fas fa-home"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="./myReports.html"><i class="fas fa-clipboard-list"></i> My Reports</a>
+          </li>
+          <li>
+            <a href="#messages"><i class="fas fa-envelope"></i> Messages</a>
+          </li>
+          <li>
+            <a href="#notifications"><i class="fas fa-bell"></i> Notifications</a>
+          </li>
+          <li>
+            <a href="#help"><i class="fas fa-question-circle"></i> Help & Support</a>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-outline">
+          <i class="fas fa-sign-out-alt"></i> Exit Dashboard
+        </button>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="content-header">
+        <div class="header-left">
+          <h1>Dashboard</h1>
+          <p class="breadcrumb">Home > Dashboard</p>
+        </div>
+        <div class="header-right">
+          <div class="notification-bell">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count">3</span>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-outline"><i class="fas fa-print"></i> Print Report</button>
+            <button class="btn btn-primary"><i class="fas fa-edit"></i> New Report</button>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Dashboard Content -->
+      <div class="dashboard-content">
+        <!-- Stats Cards -->
+        <section class="stats-section">
+          <div class="section-header">
+            <h2>Report Statistics</h2>
+            <p>Overview of your report's engagement</p>
+          </div>
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon blue">
+                <i class="fas fa-eye"></i>
+              </div>
+              <div class="stat-details">
+                <h3>24</h3>
+                <p>Total Views</p>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon green">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <div class="stat-details">
+                <h3>5</h3>
+                <p>Authority Views</p>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon orange">
+                <i class="fas fa-newspaper"></i>
+              </div>
+              <div class="stat-details">
+                <h3>12</h3>
+                <p>Journalist Views</p>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon purple">
+                <i class="fas fa-comments"></i>
+              </div>
+              <div class="stat-details">
+                <h3>8</h3>
+                <p>Responses</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- My Reports -->
+        <section class="reports-section">
+          <div class="section-header">
+            <h2>My Reports</h2>
+            <p>Review your submitted reports</p>
+          </div>
+          
+          <div class="reports-table-container">
+            <table class="reports-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Submission Date</th>
+                  <th>Status</th>
+                  <th>Emergency Level</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#R-2025-0042</td>
+                  <td>Unpaid Wages for 3 Months</td>
+                  <td>Apr 15, 2025</td>
+                  <td><span class="status-badge in-progress">In Progress</span></td>
+                  <td><span class="priority-badge high">High</span></td>
+                  <td>
+                    <button class="btn-icon view-btn" title="View Report"><i class="fas fa-eye"></i></button>
+                    <button class="btn-icon message-btn" title="Messages"><i class="fas fa-envelope"></i> <span class="badge">3</span></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#R-2025-0036</td>
+                  <td>Passport Confiscation</td>
+                  <td>Apr 10, 2025</td>
+                  <td><span class="status-badge under-review">Under Review</span></td>
+                  <td><span class="priority-badge critical">Critical</span></td>
+                  <td>
+                    <button class="btn-icon view-btn" title="View Report"><i class="fas fa-eye"></i></button>
+                    <button class="btn-icon message-btn" title="Messages"><i class="fas fa-envelope"></i> <span class="badge">5</span></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#R-2025-0028</td>
+                  <td>Poor Living Conditions</td>
+                  <td>Apr 4, 2025</td>
+                  <td><span class="status-badge resolved">Resolved</span></td>
+                  <td><span class="priority-badge medium">Medium</span></td>
+                  <td>
+                    <button class="btn-icon view-btn" title="View Report"><i class="fas fa-eye"></i></button>
+                    <button class="btn-icon message-btn" title="Messages"><i class="fas fa-envelope"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        
+        <!-- Messages Section -->
+        <section class="messages-section">
+          <div class="section-header">
+            <h2>Messages & Responses</h2>
+            <p>Communications regarding your reports</p>
+            <div class="filter-controls">
+              <div class="filter-group">
+                <label for="filter-source">Filter by Source:</label>
+                <select id="filter-source">
+                  <option value="all">All Sources</option>
+                  <option value="authority">Authorities</option>
+                  <option value="journalist">Journalists</option>
+                  <option value="ngo">NGOs</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="filter-report">Filter by Report:</label>
+                <select id="filter-report">
+                  <option value="all">All Reports</option>
+                  <option value="R-2025-0042">Unpaid Wages (#R-2025-0042)</option>
+                  <option value="R-2025-0036">Passport Confiscation (#R-2025-0036)</option>
+                  <option value="R-2025-0028">Poor Living Conditions (#R-2025-0028)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="messages-grid">
+            <!-- Authority Message -->
+            <div class="message-card authority">
+              <div class="message-header">
+                <div class="sender-info">
+                  <img src="https://img.freepik.com/premium-vector/men-icon-trendy-avatar-character-cheerful-happy-people-flat-vector-illustration-round-frame-male-portraits-group-team-adorable-guys-isolated-white-background_275421-286.jpg?ga=GA1.1.1116178273.1744995404&semt=ais_hybrid&w=740" alt="Authority Avatar" class="sender-avatar">
+                  <div class="sender-details">
+                    <h4>Department of Labor</h4>
+                    <p class="sender-type">Government Authority</p>
+                  </div>
+                </div>
+                <div class="message-meta">
+                  <span class="message-date">Apr 16, 2025</span>
+                  <span class="message-report">#R-2025-0042</span>
+                </div>
+              </div>
+              <div class="message-body">
+                <p>We have received your report regarding unpaid wages at XYZ Company. An investigation has been initiated (Case #LAB-2025-1103). A labor inspector will contact you within 48 hours to gather additional information.</p>
+              </div>
+              <div class="message-footer">
+                <div class="message-actions">
+                  <button class="btn-sm btn-outline"><i class="fas fa-reply"></i> Reply</button>
+                  <button class="btn-sm btn-outline"><i class="fas fa-download"></i> Save PDF</button>
+                </div>
+                <div class="case-reference">
+                  <span class="ref-number">Case #LAB-2025-1103</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Journalist Message -->
+            <div class="message-card journalist">
+              <div class="message-header">
+                <div class="sender-info">
+                  <img src="https://img.freepik.com/premium-vector/men-icon-trendy-avatar-character-cheerful-happy-people-flat-vector-illustration-round-frame-male-portraits-group-team-adorable-guys-isolated-white-background_275421-286.jpg?ga=GA1.1.1116178273.1744995404&semt=ais_hybrid&w=740" alt="Journalist Avatar" class="sender-avatar">
+                  <div class="sender-details">
+                    <h4>Sarah Johnson</h4>
+                    <p class="sender-type">Journalist - Global News Network</p>
+                  </div>
+                </div>
+                <div class="message-meta">
+                  <span class="message-date">Apr 15, 2025</span>
+                  <span class="message-report">#R-2025-0042</span>
+                </div>
+              </div>
+              <div class="message-body">
+                <p>I'm a journalist with Global News Network investigating wage disputes in the construction sector. I'd like to include your case in an upcoming feature story. All details can remain anonymous if you prefer. Please let me know if you would be willing to discuss your experience.</p>
+              </div>
+              <div class="message-footer">
+                <div class="message-actions">
+                  <button class="btn-sm btn-outline"><i class="fas fa-reply"></i> Reply</button>
+                  <button class="btn-sm btn-outline"><i class="fas fa-user-shield"></i> Request Anonymity</button>
+                </div>
+                <div class="verification-badge">
+                  <i class="fas fa-check-circle"></i> Verified Journalist
+                </div>
+              </div>
+            </div>
+            
+            <!-- Authority Message -->
+            <div class="message-card authority">
+              <div class="message-header">
+                <div class="sender-info">
+                  <img src="https://img.freepik.com/premium-vector/men-icon-trendy-avatar-character-cheerful-happy-people-flat-vector-illustration-round-frame-male-portraits-group-team-adorable-guys-isolated-white-background_275421-286.jpg?ga=GA1.1.1116178273.1744995404&semt=ais_hybrid&w=740" alt="Authority Avatar" class="sender-avatar">
+                  <div class="sender-details">
+                    <h4>Ministry of Foreign Affairs</h4>
+                    <p class="sender-type">Government Authority</p>
+                  </div>
+                </div>
+                <div class="message-meta">
+                  <span class="message-date">Apr 14, 2025</span>
+                  <span class="message-report">#R-2025-0036</span>
+                </div>
+              </div>
+              <div class="message-body">
+                <p>Regarding your report about passport confiscation, our embassy has been notified and is coordinating with local authorities. This practice is illegal under local labor laws. Please attend the scheduled meeting at the embassy on April 20th to provide a formal statement.</p>
+              </div>
+              <div class="message-footer">
+                <div class="message-actions">
+                  <button class="btn-sm btn-outline"><i class="fas fa-reply"></i> Reply</button>
+                  <button class="btn-sm btn-outline"><i class="fas fa-calendar-check"></i> Confirm Appointment</button>
+                </div>
+                <div class="case-reference">
+                  <span class="ref-number">Case #MFA-2025-0217</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- NGO Message -->
+            <div class="message-card ngo">
+              <div class="message-header">
+                <div class="sender-info">
+                  <img src="https://img.freepik.com/premium-vector/men-icon-trendy-avatar-character-cheerful-happy-people-flat-vector-illustration-round-frame-male-portraits-group-team-adorable-guys-isolated-white-background_275421-286.jpg?ga=GA1.1.1116178273.1744995404&semt=ais_hybrid&w=740" alt="NGO Avatar" class="sender-avatar">
+                  <div class="sender-details">
+                    <h4>Migrant Rights Coalition</h4>
+                    <p class="sender-type">Non-Governmental Organization</p>
+                  </div>
+                </div>
+                <div class="message-meta">
+                  <span class="message-date">Apr 13, 2025</span>
+                  <span class="message-report">#R-2025-0036</span>
+                </div>
+              </div>
+              <div class="message-body">
+                <p>We've reviewed your case regarding passport confiscation. Our legal team offers free representation for such cases. We can assist you with legal procedures and ensure your rights are protected throughout the process. Please contact our hotline at +1-555-123-4567 or reply to this message.</p>
+              </div>
+              <div class="message-footer">
+                <div class="message-actions">
+                  <button class="btn-sm btn-outline"><i class="fas fa-reply"></i> Reply</button>
+                  <button class="btn-sm btn-outline"><i class="fas fa-phone"></i> Call Hotline</button>
+                </div>
+                <div class="verification-badge">
+                  <i class="fas fa-check-circle"></i> Verified Organization
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Notifications Section -->
+        <section class="notifications-section">
+          <div class="section-header">
+            <h2>Recent Notifications</h2>
+            <button class="btn-text">Mark all as read</button>
+          </div>
+          
+          <div class="notifications-list">
+            <div class="notification-item unread">
+              <div class="notification-icon status-update">
+                <i class="fas fa-sync-alt"></i>
+              </div>
+              <div class="notification-content">
+                <h4>Status Update</h4>
+                <p>Your report #R-2025-0042 status has changed to "In Progress"</p>
+                <span class="notification-time">Today, 09:45 AM</span>
+              </div>
+              <div class="notification-actions">
+                <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+              </div>
+            </div>
+            
+            <div class="notification-item unread">
+              <div class="notification-icon new-message">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div class="notification-content">
+                <h4>New Message</h4>
+                <p>You received a new message from Department of Labor regarding report #R-2025-0042</p>
+                <span class="notification-time">Today, 08:30 AM</span>
+              </div>
+              <div class="notification-actions">
+                <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+              </div>
+            </div>
+            
+            <div class="notification-item unread">
+              <div class="notification-icon new-viewer">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <div class="notification-content">
+                <h4>New Authority Viewer</h4>
+                <p>Ministry of Foreign Affairs has viewed your report #R-2025-0036</p>
+                <span class="notification-time">Yesterday, 03:15 PM</span>
+              </div>
+              <div class="notification-actions">
+                <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon new-viewer">
+                <i class="fas fa-newspaper"></i>
+              </div>
+              <div class="notification-content">
+                <h4>New Journalist Viewer</h4>
+                <p>Sarah Johnson (Global News Network) has viewed your report #R-2025-0042</p>
+                <span class="notification-time">Apr 15, 2025, 10:20 AM</span>
+              </div>
+              <div class="notification-actions">
+                <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon document">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <div class="notification-content">
+                <h4>Document Available</h4>
+                <p>An official case document is available for report #R-2025-0036</p>
+                <span class="notification-time">Apr 14, 2025, 02:40 PM</span>
+              </div>
+              <div class="notification-actions">
+                <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  
+  <script src="dashboard.js"></script>
+</body>
+</html>

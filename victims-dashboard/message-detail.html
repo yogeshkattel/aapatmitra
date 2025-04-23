@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message Detail | Issue Tracking Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Styles for Message Detail Page */
+    .message-detail-container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 120px); /* Adjust based on header/footer */
+    }
+
+    .message-header {
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .message-header-info {
+      flex-grow: 1;
+    }
+
+    .message-header-info h2 {
+      font-size: 1.3rem;
+      margin-bottom: 5px;
+    }
+
+    .message-header-info p {
+      font-size: 0.9rem;
+      color: #777;
+    }
+
+    .message-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #f5f5f5;
+      flex-shrink: 0;
+    }
+
+    .message-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .message-actions-top {
+      display: flex;
+      gap: 10px;
+    }
+
+    .message-body {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto; /* Enable scrolling for long messages */
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message-bubble {
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 10px 15px;
+      max-width: 70%;
+      word-break: break-word;
+    }
+
+    .message-bubble.sent {
+      background-color: #e3f2fd;
+      align-self: flex-end;
+    }
+
+    .message-bubble .message-sender {
+      font-size: 0.8rem;
+      color: #555;
+      margin-bottom: 3px;
+      font-weight: 500;
+    }
+
+    .message-bubble .message-timestamp {
+      font-size: 0.75rem;
+      color: #777;
+      text-align: right;
+      margin-top: 5px;
+    }
+
+    .message-input-area {
+      padding: 15px 20px;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .message-input {
+      flex-grow: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      resize: none;
+      min-height: 40px;
+    }
+
+    .send-button {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .send-button:hover {
+      background-color: #1565c0;
+    }
+
+    .attachment-button {
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 4px;
+    }
+
+    .attachment-button:hover {
+      background-color: #f0f0f0;
+      color: #1976d2;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <img src="/api/placeholder/80/80" alt="Logo">
+          <h2>Issue Tracker</h2>
+        </div>
+        <button id="sidebar-toggle" class="sidebar-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+
+      <div class="user-info">
+        <div class="user-avatar">
+          <img src="/api/placeholder/48/48" alt="User Avatar">
+        </div>
+        <div class="user-details">
+          <h3 id="user-name">Guest User</h3>
+          <p id="user-role">Temporary Access</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+          </li>
+          <li class="active">
+            <a href="my-reports.html"><i class="fas fa-clipboard-list"></i> My Reports</a>
+          </li>
+          <li class="active">
+            <a href="messages.html"><i class="fas fa-envelope"></i> Messages</a>
+          </li>
+          <li>
+            <a href="#notifications"><i class="fas fa-bell"></i> Notifications</a>
+          </li>
+          <li>
+            <a href="#help"><i class="fas fa-question-circle"></i> Help & Support</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-outline">
+          <i class="fas fa-sign-out-alt"></i> Exit Dashboard
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="content-header">
+        <div class="header-left">
+          <h1>Message with Sarah Johnson</h1>
+          <p class="breadcrumb">Home > <a href="my-reports.html">My Reports</a> > <a href="messages.html">Messages</a> > Sarah Johnson</p>
+        </div>
+        <div class="header-right">
+          <div class="notification-bell">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count">3</span>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-outline"><i class="fas fa-user-minus"></i> Block User</button>
+            <button class="btn btn-outline"><i class="fas fa-trash"></i> Delete Chat</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <div class="message-detail-container">
+          <div class="message-header">
+            <div class="message-avatar">
+              <img src="/api/placeholder/50/50" alt="Sarah Johnson Avatar">
+            </div>
+            <div class="message-header-info">
+              <h2>Sarah Johnson</h2>
+              <p>Case Manager</p>
+            </div>
+            <div class="message-actions-top">
+              <button class="btn btn-icon" title="View Profile"><i class="fas fa-user"></i></button>
+              <button class="btn btn-icon" title="Call"><i class="fas fa-phone"></i></button>
+            </div>
+          </div>
+
+          <div class="message-body">
+            <div class="message-bubble">
+              <div class="message-sender">Sarah Johnson</div>
+              <p>Hi there! Just wanted to give you an update on report #R-2025-0036.</p>
+              <div class="message-timestamp">Apr 16, 2025 • 09:15</div>
+            </div>
+            <div class="message-bubble sent">
+              <p>Thanks for the update, Sarah! Appreciate it.</p>
+              <div class="message-timestamp">Apr 16, 2025 • 09:18</div>
+            </div>
+            <div class="message-bubble">
+              <div class="message-sender">Sarah Johnson</div>
+              <p>The Labor Ministry inspection is scheduled for April 18th. We've also connected with a local NGO for potential support.</p>
+              <div class="message-timestamp">Apr 16, 2025 • 09:20</div>
+            </div>
+            <div class="message-bubble sent">
+              <p>That's great news. Please keep me informed after the inspection.</p>
+              <div class="message-timestamp">Apr 16, 2025 • 09:22</div>
+            </div>
+            </div>
+
+          <div class="message-input-area">
+            <button class="attachment-button" title="Attach File"><i class="fas fa-paperclip"></i></button>
+            <textarea class="message-input" placeholder="Write a message..."></textarea>
+            <button class="send-button"><i class="fas fa-paper-plane"></i> Send</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Basic sidebar toggle functionality (you might have this in your main script)
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebarToggle = document.getElementById('sidebar-toggle');
+      const sidebar = document.querySelector('.sidebar');
+      const mainContent = document.querySelector('.main-content');
+
+      if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+          sidebar.classList.toggle('collapsed');
+          mainContent.classList.toggle('expanded');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Detail | Issue Tracking Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Styles for Report Detail Page */
+    .report-detail-container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    
+    .report-detail-header {
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .report-title-section h2 {
+      font-size: 1.5rem;
+      margin: 0 0 10px 0;
+    }
+    
+    .report-meta-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    
+    .report-actions-top {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .report-body {
+      padding: 20px;
+    }
+    
+    .report-content {
+      margin-bottom: 30px;
+    }
+    
+    .report-section {
+      margin-bottom: 25px;
+    }
+    
+    .report-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .report-timeline {
+      margin-top: 20px;
+    }
+    
+    .timeline-item {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    
+    .timeline-item:not(:last-child):before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 30px;
+      bottom: -10px;
+      width: 2px;
+      background-color: #eee;
+    }
+    
+    .timeline-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .timeline-icon.update {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+    
+    .timeline-icon.message {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    
+    .timeline-icon.status {
+      background-color: #fff8e1;
+      color: #f57f17;
+    }
+    
+    .timeline-content {
+      flex-grow: 1;
+    }
+    
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    
+    .timeline-person {
+      font-weight: 500;
+    }
+    
+    .timeline-date {
+      font-size: 0.85rem;
+      color: #777;
+    }
+    
+    .evidence-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .evidence-item {
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .evidence-item img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
+    
+    .evidence-item.document {
+      height: 120px;
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #eee;
+    }
+    
+    .document-icon {
+      font-size: 2rem;
+      color: #777;
+      margin-bottom: 10px;
+    }
+    
+    .document-name {
+      font-size: 0.8rem;
+      color: #555;
+      text-align: center;
+      padding: 0 5px;
+    }
+    
+    .comments-section {
+      margin-top: 30px;
+    }
+    
+    .comment {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .comment-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #f5f5f5;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    
+    .comment-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .comment-content {
+      flex-grow: 1;
+    }
+    
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    
+    .comment-author {
+      font-weight: 500;
+    }
+    
+    .comment-date {
+      font-size: 0.85rem;
+      color: #777;
+    }
+    
+    .comment-text {
+      background-color: #f9f9f9;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+    }
+    
+    .comment-actions {
+      display: flex;
+      gap: 15px;
+      font-size: 0.85rem;
+    }
+    
+    .comment-action {
+      color: #666;
+      cursor: pointer;
+    }
+    
+    .comment-action:hover {
+      color: #1976d2;
+    }
+    
+    .add-comment {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+    }
+    
+    .add-comment .comment-avatar {
+      margin-top: 5px;
+    }
+    
+    .comment-input-container {
+      flex-grow: 1;
+    }
+    
+    .comment-input {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      resize: vertical;
+    }
+    
+    .comment-actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .attachment-options {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .attachment-option {
+      color: #666;
+      cursor: pointer;
+    }
+    
+    .attachment-option:hover {
+      color: #1976d2;
+    }
+    
+    .related-reports {
+      margin-top: 30px;
+    }
+    
+    .related-report-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .related-report-item:last-child {
+      border-bottom: none;
+    }
+    
+    .related-report-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .related-report-title {
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    
+    .related-report-meta {
+      font-size: 0.85rem;
+      color: #777;
+    }
+    
+    .contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .contact-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #f5f5f5;
+      overflow: hidden;
+    }
+    
+    .contact-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .contact-name {
+      font-weight: 500;
+    }
+    
+    .contact-role {
+      font-size: 0.85rem;
+      color: #777;
+    }
+    
+    .contact-actions {
+      display: flex;
+      gap: 10px;
+      margin-left: auto;
+    }
+    
+    .location-map {
+      height: 200px;
+      background-color: #f5f5f5;
+      margin-top: 15px;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Status and priority badges */
+    .status-badge {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .status-badge.new {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+    
+    .status-badge.in-progress {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    
+    .status-badge.under-review {
+      background-color: #fff8e1;
+      color: #f57f17;
+    }
+    
+    .status-badge.resolved {
+      background-color: #efebe9;
+      color: #5d4037;
+    }
+    
+    .priority-badge {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .priority-badge.low {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    
+    .priority-badge.medium {
+      background-color: #fff8e1;
+      color: #f57f17;
+    }
+    
+    .priority-badge.high {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+    
+    .priority-badge.critical {
+      background-color: #c62828;
+      color: white;
+    }
+    
+    /* Two-column layout for desktop */
+    @media (min-width: 992px) {
+      .report-detail-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+      }
+      
+      .report-main-content {
+        grid-column: 1;
+      }
+      
+      .report-sidebar {
+        grid-column: 2;
+      }
+    }
+    
+    /* Button styles */
+    .btn {
+      padding: 10px 16px;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background-color: #1565c0;
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid #ddd;
+      color: #333;
+    }
+    
+    .btn-outline:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+    
+    .btn-icon {
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 4px;
+    }
+    
+    .btn-icon:hover {
+      background-color: #f0f0f0;
+      color: #1976d2;
+    }
+
+
+
+    /* Styles for My Reports Page with Message Sidebar */
+    .my-reports-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr; /* Adjust as needed */
+      gap: 20px;
+    }
+
+    .reports-list-section {
+      grid-column: 1;
+    }
+
+    .messages-sidebar {
+      grid-column: 2;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 15px;
+      height: fit-content; /* Adjust as needed */
+    }
+
+    .messages-sidebar h3 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .message-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+
+    .message-item:last-child {
+      border-bottom: none;
+    }
+
+    .message-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #e0e0e0;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .message-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .message-info {
+      flex-grow: 1;
+    }
+
+    .message-sender {
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+
+    .message-preview {
+      font-size: 0.9rem;
+      color: #777;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .message-time {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-left: auto;
+    }
+
+    .message-item:hover {
+      background-color: #f0f0f0;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Main Dashboard -->
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <img src="/api/placeholder/80/80" alt="Logo">
+          <h2>Issue Tracker</h2>
+        </div>
+        <button id="sidebar-toggle" class="sidebar-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      
+      <div class="user-info">
+        <div class="user-avatar">
+          <img src="/api/placeholder/48/48" alt="User Avatar">
+        </div>
+        <div class="user-details">
+          <h3 id="user-name">Guest User</h3>
+          <p id="user-role">Temporary Access</p>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+          </li>
+          <li class="active">
+            <a href="my-reports.html"><i class="fas fa-clipboard-list"></i> My Reports</a>
+          </li>
+          <li>
+            <a href="#messages"><i class="fas fa-envelope"></i> Messages</a>
+          </li>
+          <li>
+            <a href="#notifications"><i class="fas fa-bell"></i> Notifications</a>
+          </li>
+          <li>
+            <a href="#help"><i class="fas fa-question-circle"></i> Help & Support</a>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-outline">
+          <i class="fas fa-sign-out-alt"></i> Exit Dashboard
+        </button>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="content-header">
+        <div class="header-left">
+          <h1>Report Details</h1>
+          <p class="breadcrumb">Home > <a href="my-reports.html">My Reports</a> > Report #R-2025-0036</p>
+        </div>
+        <div class="header-right">
+          <div class="notification-bell">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count">3</span>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-outline"><i class="fas fa-print"></i> Print</button>
+            <button class="btn btn-outline"><i class="fas fa-share-alt"></i> Share</button>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Page Content -->
+      <div class="dashboard-content">
+        <!-- Report Detail Section -->
+        <section class="report-detail-container">
+          <div class="report-detail-header">
+            <div class="report-title-section">
+              <span class="report-id">#R-2025-0036</span>
+              <h2>Passport Confiscation</h2>
+              <div class="report-meta-info">
+                <div class="meta-item">
+                  <i class="far fa-calendar-alt"></i>
+                  <span>Submitted Apr 10, 2025</span>
+                </div>
+                <div class="meta-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>ABC Hotel, Downtown District</span>
+                </div>
+                <div class="meta-item">
+                  <i class="fas fa-user"></i>
+                  <span>Reported by: Anonymous Submission</span>
+                </div>
+                <div class="meta-item">
+                  <span class="status-badge under-review">Under Review</span>
+                </div>
+                <div class="meta-item">
+                  <span class="priority-badge critical">Critical Priority</span>
+                </div>
+              </div>
+            </div>
+            <div class="report-actions-top">
+              <button class="btn btn-primary"><i class="fas fa-pencil-alt"></i> Update Status</button>
+              <button class="btn btn-outline"><i class="fas fa-flag"></i> Flag</button>
+            </div>
+          </div>
+          
+          <div class="report-body">
+            <div class="report-detail-layout">
+              <!-- Main Content Column -->
+              <div class="report-main-content">
+                <div class="report-content">
+                  <div class="report-section">
+                    <h3>Description</h3>
+                    <p>Employer at ABC Hotel has confiscated passports from approximately 30 workers. These are primarily migrant workers from South Asian countries who were recruited to work as housekeeping and kitchen staff.</p>
+                    <p>Workers report that upon arrival in the country, their passports were taken by management under the pretense of "processing work permits." However, despite multiple requests over the past 3-4 months, management has refused to return the documents.</p>
+                    <p>In addition to passport confiscation, workers report:</p>
+                    <ul>
+                      <li>Being housed in crowded dormitory-style rooms (8-10 people per room)</li>
+                      <li>Restricted from leaving the hotel premises without permission</li>
+                      <li>Limited access to communication with family (shared phone with limited time)</li>
+                      <li>Threats of deportation if they complain or attempt to leave employment</li>
+                    </ul>
+                    <p>Multiple workers have attempted to raise these issues with hotel management but have been threatened with termination. The situation is causing severe mental distress among affected workers.</p>
+                  </div>
+                  
+                  <div class="report-section">
+                    <h3>Evidence</h3>
+                    <p>The following evidence has been submitted with this report:</p>
+                    <div class="evidence-section">
+                      <div class="evidence-item">
+                        <img src="./images/workerhousing.avif" alt="Worker housing conditions">
+                      </div>
+                      <div class="evidence-item">
+                        <img src="./images/workerdormitory.avif" alt="Workers dormitory">
+                      </div>
+                      <div class="evidence-item document">
+                        <i class="fas fa-file-pdf document-icon"></i>
+                        <div class="document-name">Worker Testimonies.pdf</div>
+                      </div>
+                      <div class="evidence-item document">
+                        <i class="fas fa-file-audio document-icon"></i>
+                        <div class="document-name">Interview_Recording.mp3</div>
+                      </div>
+                      <div class="evidence-item document">
+                        <i class="fas fa-file-alt document-icon"></i>
+                        <div class="document-name">Contract_Sample.pdf</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="report-section">
+                    <h3>Case Timeline</h3>
+                    <div class="report-timeline">
+                      <div class="timeline-item">
+                        <div class="timeline-icon update">
+                          <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="timeline-content">
+                          <div class="timeline-header">
+                            <div class="timeline-person">Anonymous Submission</div>
+                            <div class="timeline-date">Apr 10, 2025 • 14:32</div>
+                          </div>
+                          <div class="timeline-body">
+                            <p>Report submitted through anonymous channel</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="timeline-item">
+                        <div class="timeline-icon status">
+                          <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="timeline-content">
+                          <div class="timeline-header">
+                            <div class="timeline-person">System</div>
+                            <div class="timeline-date">Apr 10, 2025 • 15:45</div>
+                          </div>
+                          <div class="timeline-body">
+                            <p>Report verified and status changed to <span class="status-badge new">New</span></p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="timeline-item">
+                        <div class="timeline-icon message">
+                          <i class="fas fa-comment"></i>
+                        </div>
+                        <div class="timeline-content">
+                          <div class="timeline-header">
+                            <div class="timeline-person">Sarah Johnson (Case Manager)</div>
+                            <div class="timeline-date">Apr 11, 2025 • 09:20</div>
+                          </div>
+                          <div class="timeline-body">
+                            <p>Initial assessment completed. This appears to be a serious case of potential labor trafficking. I've escalated this to our Critical Response Team and contacted the Labor Ministry's Emergency Hotline.</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="timeline-item">
+                        <div class="timeline-icon status">
+                          <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <div class="timeline-content">
+                          <div class="timeline-header">
+                            <div class="timeline-person">Sarah Johnson</div>
+                            <div class="timeline-date">Apr 11, 2025 • 09:25</div>
+                          </div>
+                          <div class="timeline-body">
+                            <p>Status changed from <span class="status-badge new">New</span> to <span class="status-badge in-progress">In Progress</span></p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="timeline-item">
+                        <div class="timeline-icon message">
+                          <i class="fas fa-comment"></i>
+                        </div>
+                        <div class="timeline-content">
+                          <div class="timeline-header">
+                            <div class="timeline-person">Michael Chen (Legal Advisor)</div>
+                            <div class="timeline-date">Apr 12, 2025 • 11:15</div>
+                          </div>
+                          <div class="timeline-body">
+                            <p>I've reviewed the evidence submitted. This is a clear violation of labor laws Section 45.3 prohibiting document confiscation. We should pursue immediate intervention through the Labor Ministry and possibly involve law enforcement due to the restrictions on movement.</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="timeline-item">
+                        <div class="timeline-icon message">
+                          <i class="fas fa-comment"></i>
+                        </div>
+                        <div class="timeline-content">
+                          <div class="timeline-header">
+                            <div class="timeline-person">Alex Rivera (Field Investigator)</div>
+                            <div class="timeline-date">Apr 14, 2025 • 16:40</div>
+                          </div>
+                          <div class="timeline-body">
+                            <p>Conducted initial field visit to the area. Was unable to access worker dormitories but interviewed 3 workers who confirmed the passport confiscation. They're extremely worried about retaliation. Recommend coordinating with Labor Ministry for an official inspection.</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="timeline-item">
+                        <div class="timeline-icon status">
+                          <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <div class="timeline-content">
+                          <div class="timeline-header">
+                            <div class="timeline-person">Sarah Johnson</div>
+                            <div class="timeline-date">Apr 15, 2025 • 10:30</div>
+                          </div>
+                          <div class="timeline-body">
+                            <p>Status changed from <span class="status-badge in-progress">In Progress</span> to <span class="status-badge under-review">Under Review</span> - Pending Labor Ministry inspection scheduled for Apr 18</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- <div class="comments-section">
+                  <h3>Comments & Updates (12)</h3>
+                  
+                  <div class="comment">
+                    <div class="comment-avatar">
+                      <img src="/api/placeholder/40/40" alt="User Avatar">
+                    </div>
+                    <div class="comment-content">
+                      <div class="comment-header">
+                        <div class="comment-author">Sarah Johnson</div>
+                        <div class="comment-date">Apr 16, 2025 • 09:15</div>
+                      </div>
+                      <div class="comment-text">
+                        <p>Update: Labor Ministry has confirmed they will conduct an unannounced inspection of ABC Hotel on April 18. We've also connected with a local migrant rights NGO who can provide emergency housing if needed.</p>
+                      </div>
+                      <div class="comment-actions">
+                        <span class="comment-action"><i class="fas fa-reply"></i> Reply</span>
+                        <span class="comment-action"><i class="fas fa-flag"></i> Report</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="comment">
+                    <div class="comment-avatar">
+                      <img src="/api/placeholder/40/40" alt="User Avatar">
+                    </div>
+                    <div class="comment-content">
+                      <div class="comment-header">
+                        <div class="comment-author">Michael Chen</div>
+                        <div class="comment-date">Apr 16, 2025 • 14:30</div>
+                      </div>
+                      <div class="comment-text">
+                        <p>I've prepared an emergency legal brief for the Labor Ministry inspectors detailing the specific violations and relevant legal codes. Will share with the inspection team tomorrow.</p>
+                      </div>
+                      <div class="comment-actions">
+                        <span class="comment-action"><i class="fas fa-reply"></i> Reply</span>
+                        <span class="comment-action"><i class="fas fa-flag"></i> Report</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="comment">
+                    <div class="comment-avatar">
+                      <img src="/api/placeholder/40/40" alt="User Avatar">
+                    </div>
+                    <div class="comment-content">
+                      <div class="comment-header">
+                        <div class="comment-author">Alex Rivera</div>
+                        <div class="comment-date">Apr 17, 2025 • 11:45</div>
+                      </div>
+                      <div class="comment-text">
+                        <p>During follow-up conversations with workers, I've learned that hotel management is planning to relocate some workers tomorrow. This may be an attempt to hide the full extent of the situation before inspection. I've alerted the Ministry team about this development.</p>
+                      </div>
+                      <div class="comment-actions">
+                        <span class="comment-action"><i class="fas fa-reply"></i> Reply</span>
+                        <span class="comment-action"><i class="fas fa-flag"></i> Report</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="add-comment">
+                    <div class="comment-avatar">
+                      <img src="/api/placeholder/40/40" alt="Your Avatar">
+                    </div>
+                    <div class="comment-input-container">
+                      <textarea class="comment-input" placeholder="Add a comment or update..."></textarea>
+                      <div class="comment-actions-row">
+                        <div class="attachment-options">
+                          <span class="attachment-option"><i class="fas fa-paperclip"></i> Attach File</span>
+                          <span class="attachment-option"><i class="fas fa-camera"></i> Photo</span>
+                          <span class="attachment-option"><i class="fas fa-at"></i> Mention</span>
+                        </div>
+                        <button class="btn btn-primary">Post Comment</button>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+              
+              <!-- Sidebar Column -->
+              <div class="report-sidebar">
+                <div class="report-section">
+                  <h3>Case Information</h3>
+                  <ul class="case-details">
+                    <li><strong>Reference ID:</strong> R-2025-0036</li>
+                    <li><strong>Submission Date:</strong> April 10, 2025</li>
+                    <li><strong>Last Updated:</strong> April 17, 2025</li>
+                    <li><strong>Current Status:</strong> <span class="status-badge under-review">Under Review</span></li>
+                    <li><strong>Priority Level:</strong> <span class="priority-badge critical">Critical</span></li>
+                    <li><strong>Category:</strong> Labor Rights Violation</li>
+                    <li><strong>Subcategory:</strong> Document Confiscation</li>
+                    <li><strong>Workers Affected:</strong> Approximately 30</li>
+                    <li><strong>Location Type:</strong> Hospitality</li>
+                  </ul>
+                </div>
+                
+                <div class="report-section">
+                  <h3>Location</h3>
+                  <p>ABC Hotel<br>
+                  127 Main Street<br>
+                  Downtown District<br>
+                  Metro City</p>
+                  
+                  <div class="location-map">
+                    <img src="./images/map.avif" height="200px" width="500px" alt="Map Location">
+                  </div>
+                </div>
+                
+                <div class="report-section">
+                  <h3>Viewed BY</h3>
+                  <div class="contact-list">
+                    <div class="contact-item">
+                      <div class="contact-avatar">
+                        <img src="./images/reporter.jpg" alt="Sarah Johnson">
+                      </div>
+                      <div>
+                        <div class="contact-name">Sarah Johnson</div>
+                        <div class="contact-role">Case Manager</div>
+                      </div>
+                      <div class="contact-actions">
+                        <button class="btn-icon" title="Message"><i class="fas fa-envelope"></i></button>
+                        <button class="btn-icon" title="Call"><i class="fas fa-phone"></i></button>
+                      </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                      <div class="contact-avatar">
+                        <img src="./images/reporter2.avif" alt="Michael Chen">
+                      </div>
+                      <div>
+                        <div class="contact-name">Michael Chen</div>
+                        <div class="contact-role">Legal Advisor</div>
+                      </div>
+                      <div class="contact-actions">
+                        <button class="btn-icon" title="Message"><i class="fas fa-envelope"></i></button>
+                        <button class="btn-icon" title="Call"><i class="fas fa-phone"></i></button>
+                      </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                      <div class="contact-avatar">
+                        <img src="./images//reporter.jpg" alt="Alex Rivera">
+                      </div>
+                      <div>
+                        <div class="contact-name">Alex Rivera</div>
+                        <div class="contact-role">Field Investigator</div>
+                      </div>
+                      <div class="contact-actions">
+                        <button class="btn-icon" title="Message"><i class="fas fa-envelope"></i></button>
+                        <button class="btn-icon" title="Call"><i class="fas fa-phone"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="report-section">
+                  <h3>Related Reports</h3>
+                  <div class="related-reports">
+                    <div class="related-report-item">
+                      <div class="related-report-info">
+                        <div class="related-report-title">Unpaid Wages at ABC Hotel</div>
+                        <div class="related-report-meta">#R-2024-1125 • Dec 15, 2024</div>
+                      </div>
+                      <div>
+                        <span class="status-badge resolved">Resolved</span>
+                      </div>
+                    </div>
+                    <div class="related-report-item">
+                      <div class="related-report-info">
+                        <div class="related-report-title">Poor Living Conditions - ABC Hotel Staff</div>
+                        <div class="related-report-meta">#R-2024-0987 • Oct 22, 2024</div>
+                      </div>
+                      <div>
+                        <span class="status-badge resolved">Resolved</span>
+                      </div>
+                    </div>
+                    <div class="related-report-item">
+                      <div class="related-report-info">
+                        <div class="related-report-title">Retaliation Against Workers at ABC Hotel</div>
+                        <div class="related-report-meta">#R-2025-0012 • Mar 5, 2025</div>
+                      </div>
+                      <div>
+                        <span class="status-badge in-progress">In Progress</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <aside class="messages-sidebar">
+          <h3>Messages</h3>
+          <div class="message-item" onclick="window.location.href='message-detail.html?id=1'">
+            <div class="message-avatar">
+              <img src="./images/human1.avif" alt="Sarah Johnson">
+            </div>
+            <div class="message-info">
+              <div class="message-sender">Sarah Johnson</div>
+              <div class="message-preview">Quick update on the passport case...</div>
+            </div>
+            <div class="message-time">10:15 AM</div>
+          </div>
+          <div class="message-item" onclick="window.location.href='message-detail.html?id=2'">
+            <div class="message-avatar">
+              <img src="./images/human2.avif" alt="Michael Chen">
+            </div>
+            <div class="message-info">
+              <div class="message-sender">Michael Chen</div>
+              <div class="message-preview">Legal brief is ready for the inspection team.</div>
+            </div>
+            <div class="message-time">Yesterday</div>
+          </div>
+          <div class="message-item" onclick="window.location.href='message-detail.html?id=3'">
+            <div class="message-avatar">
+              <img src="./images/human3.avif" alt="Alex Rivera">
+            </div>
+            <div class="message-info">
+              <div class="message-sender">Alex Rivera</div>
+              <div class="message-preview">Just finished the initial field visit...</div>
+            </div>
+            <div class="message-time">2 days ago</div>
+          </div>
+          </aside>
+      </div>
+    </main>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Toggle sidebar
+      const sidebarToggle = document.getElementById('sidebar-toggle');
+      const sidebar = document.querySelector('.sidebar');
+      const mainContent = document.querySelector('.main-content');
+      
+      sidebarToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('expanded');
+        
+        // Update toggle icon
+        const toggleIcon = sidebarToggle.querySelector('i');
+        if (sidebar.classList.contains('collapsed')) {
+          toggleIcon.classList.remove('fa-bars');
+          toggleIcon.classList.add('fa-arrow-right');
+        } else {
+          toggleIcon.classList.remove('fa-arrow-right');
+          toggleIcon.classList.add('fa-bars');
+        }
+      });
+      
+      // Comment submission
+      const commentForm = document.querySelector('.add-comment');
+      const commentInput = document.querySelector('.comment-input');
+      
+      commentForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (commentInput.value.trim() !== '') {
+          // In a real app, this would send the comment to the server
+          alert('Comment submitted!');
+          commentInput.value = '';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
