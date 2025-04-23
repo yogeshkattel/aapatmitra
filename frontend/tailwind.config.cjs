@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
@@ -68,5 +68,5 @@ export default {
 			}
 		}
 	},
-	plugins: ['@tailwindcss/forms', '@tailwindcss/typography']
+	plugins: []
 };

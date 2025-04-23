@@ -249,12 +249,14 @@
 			const response = await fetch(`${API_BASE_URL}/imageupload`, {
 				method: 'POST',
 				headers: {
-					Authorization: `Bearer ${token}`
+					Authorization: `Bearer ${token}`,
+					Accept: 'application/json'
+					// Don't set Content-Type for FormData, browser will set with correct boundary
 				},
 				body: formData,
-				// Don't include credentials when there are CORS issues
-				// credentials: 'include',
-				mode: 'cors'
+				// Don't use credentials with CORS requests that include Authorization header
+				mode: 'cors',
+				cache: 'no-store'
 			});
 
 			if (!response.ok) {
@@ -330,12 +332,13 @@
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`
+					Authorization: `Bearer ${token}`,
+					Accept: 'application/json'
 				},
 				body: JSON.stringify(formData),
-				// Don't include credentials when there are CORS issues
-				// credentials: 'include',
-				mode: 'cors'
+				// Don't use credentials with CORS requests that include Authorization header
+				mode: 'cors',
+				cache: 'no-store'
 			});
 
 			if (!response.ok) {

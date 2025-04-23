@@ -55,11 +55,14 @@
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`
+					Authorization: `Bearer ${token}`,
+					// Add additional headers for CORS
+					Accept: 'application/json'
 				},
-				// Don't include credentials when there are CORS issues
-				// credentials: 'include',
-				mode: 'cors'
+				// Don't use credentials: 'include' with CORS requests that include Authorization header
+				mode: 'cors',
+				// Set cache to no-store to avoid caching issues
+				cache: 'no-store'
 			});
 
 			if (!response.ok) {
@@ -123,16 +126,18 @@
 	});
 </script>
 
-<div>
+<div class="container mx-auto">
 	<h1 class="mb-6 text-2xl font-bold text-gray-800">Dashboard</h1>
 
 	{#if loading}
-		<div class="flex items-center">
-			<div class="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-indigo-500"></div>
+		<div class="flex items-center justify-center p-6">
+			<div
+				class="h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-indigo-500"
+			></div>
 			<span class="ml-3 text-gray-600">Loading your dashboard...</span>
 		</div>
 	{:else if error}
-		<div class="rounded-md bg-red-50 p-4">
+		<div class="mx-auto max-w-2xl rounded-md bg-red-50 p-4 shadow">
 			<div class="flex">
 				<div class="flex-shrink-0">
 					<svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -153,9 +158,9 @@
 		</div>
 	{:else}
 		<!-- Dashboard Content -->
-		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+		<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			<!-- Stats Cards -->
-			<div class="rounded-lg bg-white p-6 shadow-md">
+			<div class="overflow-hidden rounded-lg bg-white p-6 shadow">
 				<div class="flex items-center">
 					<div class="rounded-full bg-indigo-100 p-3">
 						<svg
@@ -179,7 +184,7 @@
 				</div>
 			</div>
 
-			<div class="rounded-lg bg-white p-6 shadow-md">
+			<div class="overflow-hidden rounded-lg bg-white p-6 shadow">
 				<div class="flex items-center">
 					<div class="rounded-full bg-green-100 p-3">
 						<svg
@@ -203,7 +208,7 @@
 				</div>
 			</div>
 
-			<div class="rounded-lg bg-white p-6 shadow-md">
+			<div class="overflow-hidden rounded-lg bg-white p-6 shadow">
 				<div class="flex items-center">
 					<div class="rounded-full bg-yellow-100 p-3">
 						<svg
@@ -229,7 +234,7 @@
 		</div>
 
 		<!-- Welcome Message -->
-		<div class="mt-6 rounded-lg bg-indigo-50 p-6 shadow-md">
+		<div class="mt-6 overflow-hidden rounded-lg bg-indigo-50 p-6 shadow">
 			<h2 class="text-xl font-semibold text-indigo-800">Welcome to Your Dashboard</h2>
 			<p class="mt-2 text-indigo-600">
 				This is your personal hub for accessing resources, submitting reports, and managing your
@@ -243,7 +248,7 @@
 		</div>
 
 		<!-- Recent Activity -->
-		<div class="mt-6 rounded-lg bg-white p-6 shadow-md">
+		<div class="mt-6 overflow-hidden rounded-lg bg-white p-6 shadow">
 			<h2 class="mb-4 text-xl font-semibold text-gray-800">Recent Activity</h2>
 			<div class="space-y-4">
 				<div class="flex items-start">
@@ -321,3 +326,94 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	/* Ensure basic styling is applied even if Tailwind isn't loading */
+	:global(body) {
+		margin: 0;
+		padding: 0;
+		font-family:
+			system-ui,
+			-apple-system,
+			BlinkMacSystemFont,
+			'Segoe UI',
+			Roboto,
+			sans-serif;
+	}
+
+	:global(.container) {
+		width: 100%;
+		max-width: 1200px;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+
+	:global(.bg-white) {
+		background-color: white;
+	}
+
+	:global(.rounded-lg) {
+		border-radius: 0.5rem;
+	}
+
+	:global(.shadow) {
+		box-shadow:
+			0 4px 6px -1px rgba(0, 0, 0, 0.1),
+			0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	}
+
+	:global(.p-6) {
+		padding: 1.5rem;
+	}
+
+	:global(.mb-6) {
+		margin-bottom: 1.5rem;
+	}
+
+	:global(.text-2xl) {
+		font-size: 1.5rem;
+		line-height: 2rem;
+	}
+
+	:global(.font-bold) {
+		font-weight: 700;
+	}
+
+	:global(.text-gray-800) {
+		color: #1f2937;
+	}
+
+	:global(.grid) {
+		display: grid;
+	}
+
+	:global(.gap-6) {
+		gap: 1.5rem;
+	}
+
+	:global(.flex) {
+		display: flex;
+	}
+
+	:global(.items-center) {
+		align-items: center;
+	}
+
+	:global(.justify-center) {
+		justify-content: center;
+	}
+
+	@media (min-width: 640px) {
+		:global(.sm\\:grid-cols-2) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		:global(.lg\\:grid-cols-3) {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+</style>

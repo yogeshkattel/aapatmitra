@@ -4,6 +4,7 @@
 	import { auth, isAuthenticated } from '$lib/stores/auth.store';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
+	import '../../app.postcss';
 
 	let userName = 'Julie';
 	let showDropdown = false;
@@ -57,14 +58,27 @@
 	}
 </script>
 
+<svelte:head>
+	<!-- Directly include Tailwind's CDN for emergency styling -->
+	<link
+		href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+		rel="stylesheet"
+	/>
+</svelte:head>
+
 <div class="flex min-h-screen flex-col">
 	<!-- Navigation Bar -->
 	<nav class="bg-indigo-700 p-4 text-white shadow-lg">
 		<div class="container mx-auto flex items-center justify-between">
 			<!-- Logo and Brand -->
 			<div class="flex items-center">
-				<!-- Simple image without error handler to avoid issues -->
-				<img src="/logo.png" alt="Logo" class="mr-3 h-8 w-8" on:error={handleImageError} />
+				<!-- Fix the logo path to use one of the existing images -->
+				<img
+					src="/images/logo-landscape.png"
+					alt="Logo"
+					class="mr-3 h-8 w-auto"
+					on:error={handleImageError}
+				/>
 				<span class="text-xl font-bold">JulieCare</span>
 			</div>
 

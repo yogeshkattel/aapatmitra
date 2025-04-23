@@ -4,6 +4,16 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>
+			// Force-clear auth data if we've just logged out
+			if (document.querySelector('meta[name="clear-auth"]')) {
+				console.log('Clearing auth data via inline script');
+				localStorage.removeItem('token');
+				localStorage.removeItem('auth');
+				localStorage.removeItem('session');
+				localStorage.removeItem('user');
+			}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
