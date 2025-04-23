@@ -6,7 +6,7 @@
 	import { get } from 'svelte/store';
 	import '../../app.postcss';
 
-	let userName = 'Julie';
+	let userName = 'User';
 	let showDropdown = false;
 
 	// Toggle dropdown visibility
@@ -72,14 +72,7 @@
 		<div class="container mx-auto flex items-center justify-between">
 			<!-- Logo and Brand -->
 			<div class="flex items-center">
-				<!-- Fix the logo path to use one of the existing images -->
-				<img
-					src="/images/logo-landscape.png"
-					alt="Logo"
-					class="mr-3 h-8 w-auto"
-					on:error={handleImageError}
-				/>
-				<span class="text-xl font-bold">JulieCare</span>
+				<span class="text-xl font-bold">Aapatmitra</span>
 			</div>
 
 			<!-- Navigation Links -->
@@ -88,6 +81,9 @@
 				<a href="/dashboard/reports" class="px-3 py-2 text-white hover:text-indigo-200">Reports</a>
 				<a href="/dashboard/resources" class="px-3 py-2 text-white hover:text-indigo-200"
 					>Resources</a
+				>
+				<a href="/dashboard/emergency" class="px-3 py-2 text-white hover:text-indigo-200"
+					>Emergency</a
 				>
 				<a href="/dashboard/settings" class="px-3 py-2 text-white hover:text-indigo-200">Settings</a
 				>
@@ -149,6 +145,6 @@
 
 	<!-- Footer -->
 	<footer class="bg-gray-800 p-4 text-center text-white">
-		<p>© 2023 JulieCare. All rights reserved.</p>
+		<p>© 2023 Aapatmitra. All rights reserved.</p>
 	</footer>
 </div>

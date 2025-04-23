@@ -380,6 +380,12 @@
 			loading = false;
 		}
 	}
+
+	// Handle image error
+	function handleImageError(event: Event) {
+		const target = event.target as HTMLImageElement;
+		target.src = '/favicon.png';
+	}
 </script>
 
 <div class="flex min-h-screen flex-col bg-gray-100">
@@ -388,14 +394,7 @@
 		<div class="container mx-auto flex items-center justify-between">
 			<!-- Logo and Brand -->
 			<div class="flex items-center">
-				<img
-					src="/logo.png"
-					alt="Logo"
-					class="mr-3 h-8 w-8"
-					on:error={(e) => {
-						e.target.src = '/favicon.png';
-					}}
-				/>
+				<img src="/logo.png" alt="Logo" class="mr-3 h-8 w-8" on:error={handleImageError} />
 				<span class="text-xl font-bold">JulieCare</span>
 			</div>
 		</div>
