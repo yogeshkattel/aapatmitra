@@ -394,9 +394,10 @@
 		color: white;
 	}
 
-	.btn-primary:hover {
+	/* .btn-primary:hover {
 		background-color: var(--primary-dark-color);
-	}
+		color: white;
+	} */
 
 	.btn-primary:disabled {
 		opacity: 0.7;

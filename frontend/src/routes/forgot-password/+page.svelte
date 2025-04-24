@@ -290,20 +290,19 @@
 
 	.btn-primary {
 		background-color: var(--primary-color);
-		color: white;
+		color: white !important;
 	}
+
 
 	.btn-primary:hover {
-		background-color: var(--primary-dark-color);
-	}
-
-	.btn-primary:disabled {
-		opacity: 0.7;
+		/* opacity: 100; */
 		cursor: not-allowed;
 	}
 
-	.btn-block {
+  .btn-block {
 		width: 100%;
+		padding: 1rem;
+		font-size: 1.1rem;
 	}
 
 	.social-divider {
