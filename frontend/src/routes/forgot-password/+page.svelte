@@ -1,66 +1,28 @@
-<!-- src/routes/reset-password/+page.svelte -->
+<!-- src/routes/forgot-password/+page.svelte -->
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
 	import { authService } from '$lib/api/authApi';
 	import { onMount } from 'svelte';
 
 	let email = '';
-	let otp = '';
-	let password = '';
-	let confirmPassword = '';
 	let loading = false;
 	let error = '';
 	let success = false;
-	let showPassword = false;
-	let showConfirmPassword = false;
 
-	onMount(() => {
-		// Get email from query params if present
-		const urlParams = new URLSearchParams(window.location.search);
-		const emailParam = urlParams.get('email');
-		if (emailParam) {
-			email = emailParam;
-		}
-	});
-
-	function togglePassword(field: 'password' | 'confirmPassword') {
-		if (field === 'password') {
-			showPassword = !showPassword;
-		} else {
-			showConfirmPassword = !showConfirmPassword;
-		}
-	}
-
-	async function handleResetPassword() {
+	async function handleForgotPassword() {
 		loading = true;
 		error = '';
 		success = false;
 
-		// Password validation
-		if (password !== confirmPassword) {
-			error = 'Passwords do not match';
-			loading = false;
-			return;
-		}
-
-		if (password.length < 8) {
-			error = 'Password must be at least 8 characters long';
-			loading = false;
-			return;
-		}
-
 		try {
-			// Call the reset password API
-			await authService.resetPassword({ email, otp, password });
+			// Call the forgot password API
+			await authService.forgotPassword({ email });
 			success = true;
 		} catch (err) {
-			console.error('Reset password error:', err);
+			console.error('Forgot password error:', err);
 
 			if (err.response?.status === 404) {
-				error = 'Invalid OTP or email address';
-			} else if (err.response?.status === 400) {
-				error = 'Invalid or expired OTP';
+				error = 'No account found with this email address';
 			} else {
 				error = err.message || 'An error occurred while processing your request';
 			}
@@ -71,20 +33,20 @@
 </script>
 
 <svelte:head>
-	<title>Reset Password - Aapatmitra</title>
+	<title>Forgot Password - Aapatmitra</title>
 </svelte:head>
 
 <div class="auth-container">
 	<div class="auth-box">
 		<div class="auth-illustration">
-			<img src="/images/reset-password-illustration.svg" alt="Reset Password Illustration" />
+			<img src="/images/forgot-password-illustration.svg" alt="Forgot Password Illustration" />
 			<h3><span class="highlight">Aapat</span>mitra</h3>
-			<p>Create a new secure password for your account.</p>
+			<p>We'll help you reset your password and get back to your account safely.</p>
 		</div>
 		<div class="auth-form-container">
 			<div class="auth-header">
-				<h2>Reset Password</h2>
-				<p>Enter the OTP sent to your email and create a new password.</p>
+				<h2>Forgot Password</h2>
+				<p>Enter your email address and we'll send you a code to reset your password.</p>
 			</div>
 
 			{#if error}
@@ -97,11 +59,14 @@
 			{#if success}
 				<div class="success-message">
 					<i class="fas fa-check-circle"></i>
-					Your password has been reset successfully!
-					<a href="/login" class="btn btn-link">Login with your new password</a>
+					Password reset instructions have been sent to your email. Please check your inbox for the OTP
+					code.
+					<a href="/reset-password?email={encodeURIComponent(email)}" class="btn btn-link"
+						>Reset your password</a
+					>
 				</div>
 			{:else}
-				<form class="auth-form" on:submit|preventDefault={handleResetPassword}>
+				<form class="auth-form" on:submit|preventDefault={handleForgotPassword}>
 					<div class="form-group">
 						<label for="email">Email</label>
 						<input
@@ -112,81 +77,15 @@
 							required
 						/>
 					</div>
-					<div class="form-group">
-						<label for="otp">OTP Code</label>
-						<input
-							type="text"
-							id="otp"
-							bind:value={otp}
-							placeholder="Enter the OTP code from your email"
-							required
-						/>
-					</div>
-					<div class="form-group">
-						<label for="password">New Password</label>
-						<div class="password-input">
-							{#if showPassword}
-								<input
-									type="text"
-									id="password"
-									bind:value={password}
-									placeholder="Enter your new password"
-									required
-								/>
-							{:else}
-								<input
-									type="password"
-									id="password"
-									bind:value={password}
-									placeholder="Enter your new password"
-									required
-								/>
-							{/if}
-							<i
-								class={showPassword
-									? 'fas fa-eye toggle-password'
-									: 'fas fa-eye-slash toggle-password'}
-								on:click={() => togglePassword('password')}
-							></i>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="confirmPassword">Confirm Password</label>
-						<div class="password-input">
-							{#if showConfirmPassword}
-								<input
-									type="text"
-									id="confirmPassword"
-									bind:value={confirmPassword}
-									placeholder="Confirm your new password"
-									required
-								/>
-							{:else}
-								<input
-									type="password"
-									id="confirmPassword"
-									bind:value={confirmPassword}
-									placeholder="Confirm your new password"
-									required
-								/>
-							{/if}
-							<i
-								class={showConfirmPassword
-									? 'fas fa-eye toggle-password'
-									: 'fas fa-eye-slash toggle-password'}
-								on:click={() => togglePassword('confirmPassword')}
-							></i>
-						</div>
-					</div>
 					<button type="submit" class="btn btn-primary btn-block" disabled={loading}>
 						{#if loading}
-							<i class="fas fa-spinner fa-spin"></i> Resetting Password...
+							<i class="fas fa-spinner fa-spin"></i> Sending...
 						{:else}
-							Reset Password
+							Send Reset Instructions
 						{/if}
 					</button>
 					<p class="auth-redirect">
-						<a href="/forgot-password">Resend OTP code</a> • <a href="/login">Back to Login</a>
+						Remember your password? <a href="/login">Login</a>
 					</p>
 				</form>
 			{/if}
@@ -407,11 +306,55 @@
 		width: 100%;
 	}
 
+	.social-divider {
+		display: flex;
+		align-items: center;
+		margin: 1.5rem 0;
+		color: #94a3b8;
+	}
+
+	.social-divider::before,
+	.social-divider::after {
+		content: '';
+		flex: 1;
+		height: 1px;
+		background: #e2e8f0;
+	}
+
+	.social-divider span {
+		padding: 0 1rem;
+		font-size: 0.875rem;
+	}
+
+	.social-buttons {
+		display: flex;
+		gap: 1rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.btn-social {
+		flex: 1;
+		background: #f8fafc;
+		color: #64748b;
+		border: 1px solid #e2e8f0;
+	}
+
+	.btn-social:hover {
+		background: #f1f5f9;
+	}
+
+	.btn-google {
+		color: #ea4335;
+	}
+
+	.btn-facebook {
+		color: #1877f2;
+	}
+
 	.auth-redirect {
 		text-align: center;
 		font-size: 0.875rem;
 		color: #64748b;
-		margin-top: 1rem;
 	}
 
 	.auth-redirect a {

@@ -3,8 +3,11 @@
 	import { onMount } from 'svelte';
 
 	let reports = [];
+	let recentReports = [];
 	let loading = true;
+	let recentLoading = true;
 	let error = null;
+	let recentError = null;
 	let currentPage = 1;
 	let totalPages = 1;
 	let selectedReport = null;
@@ -32,6 +35,50 @@
 				return 'bg-red-100 text-red-800';
 			default:
 				return 'bg-gray-100 text-gray-800';
+		}
+	}
+
+	async function fetchRecentReports() {
+		recentLoading = true;
+		recentError = null;
+
+		try {
+			const token = browser ? localStorage.getItem('token') : null;
+			if (!token) throw new Error('No authentication token found');
+
+			const API_BASE_URL = 'http://127.0.0.1:8000';
+			const query = new URLSearchParams({
+				page: '1',
+				limit: '3',
+				sort: 'createdAt',
+				order: 'DESC'
+			});
+
+			const response = await fetch(`${API_BASE_URL}/reports?${query}`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${token}`,
+					Accept: 'application/json'
+				},
+				mode: 'cors',
+				cache: 'no-store'
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const result = await response.json();
+			if (result.success) {
+				recentReports = result.data;
+			} else {
+				recentError = result.message || 'Failed to load recent reports';
+			}
+		} catch (err) {
+			console.error('Error fetching recent reports:', err);
+			recentError = 'Failed to fetch recent reports. Please try again.';
+		} finally {
+			recentLoading = false;
 		}
 	}
 
@@ -113,6 +160,7 @@
 
 	onMount(() => {
 		if (browser) {
+			fetchRecentReports();
 			fetchReports();
 		}
 	});
@@ -121,6 +169,64 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-6">
 	<div class="container mx-auto px-4">
 		<h1 class="mb-6 text-3xl font-bold text-indigo-800">Reports Dashboard</h1>
+
+		<!-- Recent Reports Section -->
+		<div class="mb-8">
+			<h2 class="mb-4 text-2xl font-bold text-indigo-700">Recent Reports</h2>
+			{#if recentLoading}
+				<div class="flex items-center justify-center p-6">
+					<div
+						class="border-b-3 border-t-3 h-10 w-10 animate-spin rounded-full border-indigo-600"
+					></div>
+					<span class="ml-3 text-indigo-800">Loading recent reports...</span>
+				</div>
+			{:else if recentError}
+				<div class="mb-4 rounded-md bg-red-50 p-3 shadow-md">
+					<p class="text-sm text-red-700">{recentError}</p>
+				</div>
+			{:else if recentReports.length === 0}
+				<div class="rounded-xl bg-white p-6 shadow-md">
+					<p class="text-gray-700">No recent reports found.</p>
+				</div>
+			{:else}
+				<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					{#each recentReports as report}
+						<div
+							class="overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:shadow-xl"
+						>
+							<div class="bg-gradient-to-r from-indigo-500 to-purple-500 p-4">
+								<h3 class="truncate text-lg font-semibold text-white">{report.name}</h3>
+								<p class="mt-1 text-sm text-white opacity-90">{report.country}</p>
+							</div>
+							<div class="p-4">
+								<div class="mb-2 flex items-center">
+									<span
+										class="mr-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold {getEmergencyLevelColor(
+											report.emergencyLevel
+										)}"
+									>
+										{report.emergencyLevel}
+									</span>
+									<span class="text-sm text-gray-600">{report.violenceType}</span>
+								</div>
+								<p class="line-clamp-2 text-sm text-gray-700">{report.issue}</p>
+								<div class="mt-3 flex items-center justify-between">
+									<span class="text-xs text-gray-500"
+										>{new Date(report.createdAt).toLocaleDateString()}</span
+									>
+									<button
+										on:click={() => viewReport(report)}
+										class="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-sm transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
+									>
+										View Details
+									</button>
+								</div>
+							</div>
+						</div>
+					{/each}
+				</div>
+			{/if}
+		</div>
 
 		<!-- Filter Section -->
 		<div class="mb-8 rounded-xl bg-white p-6 shadow-lg">
@@ -165,6 +271,9 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- All Reports Section -->
+		<h2 class="mb-4 text-2xl font-bold text-indigo-700">All Reports</h2>
 
 		<!-- Table View -->
 		{#if loading}
