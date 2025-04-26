@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
 	let reports = [];
@@ -153,6 +154,10 @@
 		showModal = true;
 	}
 
+	function viewReportDetails(report) {
+		goto(`/dashboard/reports/${report.id}`);
+	}
+
 	function closeModal() {
 		showModal = false;
 		selectedReport = null;
@@ -214,12 +219,20 @@
 									<span class="text-xs text-gray-500"
 										>{new Date(report.createdAt).toLocaleDateString()}</span
 									>
-									<button
-										on:click={() => viewReport(report)}
-										class="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-sm transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
-									>
-										View Details
-									</button>
+									<div>
+										<button
+											on:click={() => viewReport(report)}
+											class="mr-2 rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-sm transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
+										>
+											View
+										</button>
+										<button
+											on:click={() => viewReportDetails(report)}
+											class="rounded-md bg-purple-600 px-3 py-1 text-xs font-medium text-white shadow-sm transition-all hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-1"
+										>
+											Details
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -394,9 +407,15 @@
 								<td class="whitespace-nowrap px-6 py-4 text-sm">
 									<button
 										on:click={() => viewReport(report)}
-										class="rounded-md bg-indigo-600 px-3 py-1 text-sm font-medium text-white shadow-sm transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
+										class="mr-2 rounded-md bg-indigo-600 px-3 py-1 text-sm font-medium text-white shadow-sm transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
 									>
 										View
+									</button>
+									<button
+										on:click={() => viewReportDetails(report)}
+										class="rounded-md bg-purple-600 px-3 py-1 text-sm font-medium text-white shadow-sm transition-all hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-1"
+									>
+										Details
 									</button>
 								</td>
 							</tr>
