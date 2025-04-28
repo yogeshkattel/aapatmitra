@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { authApi } from '$lib/api/auth';
+	import { initializeSocket } from '$lib/stores/socketStore';
 	import { onMount } from 'svelte';
 
 	let email = '';
@@ -28,8 +29,14 @@
 
 		try {
 			// Use the login function from authApi
-			// This will handle cookie setting and redirection
-			await authApi.login({ email, password });
+			const response = await authApi.login({ email, password });
+
+			// After successful login, initialize socket connection
+			if (response && response.token) {
+				localStorage.setItem('token', response.token);
+				initializeSocket();
+			}
+
 			// Note: redirect is now handled directly in authApi.login
 		} catch (err) {
 			console.error('Login error:', err);

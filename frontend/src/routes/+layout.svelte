@@ -1,12 +1,23 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
+	import FloatingNotification from '$lib/components/FloatingNotification.svelte';
+	import GlobalNotification from '$lib/components/GlobalNotification.svelte';
 	import setupMobileMenu from '$lib/js/menu.js';
 	import { auth, isAuthenticated } from '$lib/stores/auth.store';
-	import { onMount } from 'svelte';
+	import {
+		checkAndReconnectSocket,
+		disconnectSocket,
+		initializeSocket
+	} from '$lib/stores/socketStore';
+	import { onDestroy, onMount } from 'svelte';
 	import '../app.postcss';
 
 	// Check if the current route is in the dashboard section
 	$: isDashboardRoute = $page.url.pathname.startsWith('/dashboard');
+
+	// Keep track of the interval ID
+	let socketCheckInterval: number;
 
 	onMount(() => {
 		// Don't set up mobile menu if we're in dashboard
@@ -34,7 +45,49 @@
 			// Update client-side auth store
 			auth.login($page.data.user, $page.data.session);
 		}
+
+		// Initialize socket on mount if user is authenticated
+		if (browser) {
+			const token = localStorage.getItem('token');
+			if (token) {
+				initializeSocket();
+			}
+
+			// Listen for authentication changes
+			window.addEventListener('storage', handleStorageChange);
+
+			// Check socket connection every 30 seconds
+			socketCheckInterval = window.setInterval(() => {
+				checkAndReconnectSocket();
+			}, 30000);
+		}
 	});
+
+	// Clean up on destroy
+	onDestroy(() => {
+		if (browser) {
+			window.removeEventListener('storage', handleStorageChange);
+			disconnectSocket();
+
+			// Clear the interval
+			if (socketCheckInterval) {
+				window.clearInterval(socketCheckInterval);
+			}
+		}
+	});
+
+	// Handle storage changes (for token)
+	function handleStorageChange(event: StorageEvent): void {
+		if (event.key === 'token') {
+			if (event.newValue) {
+				// User logged in - initialize socket
+				initializeSocket();
+			} else {
+				// User logged out - disconnect socket
+				disconnectSocket();
+			}
+		}
+	}
 </script>
 
 <!-- Always include head content but conditionally include specific resources -->
@@ -172,3 +225,24 @@
 	<!-- Just render the slot without any wrapper for dashboard routes -->
 	<slot />
 {/if}
+
+<!-- Global notification component - make sure it's outside all other elements and has high z-index -->
+<div class="global-notification-container">
+	<FloatingNotification />
+</div>
+
+<style>
+	/* Add a separate style block or add to your global styles */
+	.global-notification-container {
+		position: fixed;
+		top: 0;
+		right: 0;
+		z-index: 9999; /* Make sure this is higher than any other element */
+		pointer-events: none; /* This allows clicks to pass through to elements below */
+	}
+
+	/* The notification itself will have pointer-events: auto to be clickable */
+	.global-notification-container :global(.animate-slideIn) {
+		pointer-events: auto;
+	}
+</style>

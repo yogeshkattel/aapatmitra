@@ -20,6 +20,9 @@
 	// API base URL
 	const API_BASE_URL = 'http://127.0.0.1:8000';
 
+	// Near the top of your script section, add:
+	let queryParams: URLSearchParams;
+
 	// Emergency level colors and icons
 	function getEmergencyLevelColor(level: string) {
 		switch (level?.toLowerCase()) {
@@ -91,10 +94,21 @@
 
 	// Find conversation for a specific user
 	function findConversationWithUser(userId: string) {
+		console.log('Looking for conversation with user:', userId);
+		console.log('Available conversations:', report?.conversations);
+
 		if (!report?.conversations) return null;
-		return report.conversations.find((conv: any) =>
-			conv.participants?.some((p: any) => p.userId === userId)
-		);
+
+		const found = report.conversations.find((conv: any) => {
+			// Check if any participant in this conversation has the given userId
+			return conv.participants?.some((p: any) => {
+				const match = p.userId === userId;
+				if (match) console.log('Found matching participant:', p);
+				return match;
+			});
+		});
+
+		return found || null;
 	}
 
 	// View conversation with specific user
@@ -148,7 +162,7 @@
 
 		const token = localStorage.getItem('token');
 		if (!token) return;
-		console.log(token)
+		console.log(token);
 		try {
 			// Configure Socket.IO with proper CORS settings
 			socket = io(API_BASE_URL, {
@@ -215,9 +229,11 @@
 			const result = await response.json();
 			report = result.data || result;
 			console.log('Report data:', report);
+			return report;
 		} catch (err: any) {
 			console.error('Error fetching report:', err);
 			error = err.message || 'Failed to fetch report. Please try again.';
+			return null;
 		} finally {
 			loading = false;
 		}
@@ -227,10 +243,23 @@
 		if (browser) {
 			fetchReport();
 			initializeSocket();
+
+			// Check if we need to open a specific conversation
+			queryParams = new URLSearchParams(window.location.search);
+			const openChatWithUserId = queryParams.get('openChat');
+
+			if (openChatWithUserId) {
+				// First fetch the report, then open the chat
+				fetchReport().then(() => {
+					if (report) {
+						viewConversationWithUser(openChatWithUserId);
+						// Clear the URL parameter after opening
+						history.replaceState(null, '', window.location.pathname);
+					}
+				});
+			}
 		}
 	});
-
-
 </script>
 
 <div class="relative !m-0 min-h-screen bg-gray-50 !p-0">
