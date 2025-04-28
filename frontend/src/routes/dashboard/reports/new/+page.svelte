@@ -66,10 +66,13 @@
 </script>
 
 <div class="container mx-auto px-4 py-6">
-	<h1 class="mb-4 text-2xl font-bold text-gray-800">Create Report</h1>
+	<div class="mb-6">
+		<h1 class="text-2xl font-bold text-gray-800">Create New Report</h1>
+		<p class="text-gray-600">Fill in the details below to create a new report</p>
+	</div>
 
 	{#if success}
-		<div class="rounded-md bg-green-50 p-4">
+		<div class="mb-6 rounded-md bg-green-50 p-4">
 			<div class="flex">
 				<div class="flex-shrink-0">
 					<svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
@@ -112,98 +115,175 @@
 		</div>
 	{/if}
 
-	<form on:submit|preventDefault={handleSubmit} class="space-y-6">
-		<div>
-			<label class="block text-sm font-medium text-gray-700">Name</label>
-			<input
-				type="text"
-				bind:value={formData.name}
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-			/>
-		</div>
+	<div class="rounded-lg border border-gray-200 bg-gray-50 p-6 shadow-md">
+		<form on:submit|preventDefault={handleSubmit} class="space-y-4">
+			<!-- Personal Information Section -->
+			<div class="mb-4 border-b border-gray-200 pb-4">
+				<h2 class="mb-4 text-lg font-medium text-gray-700">Personal Information</h2>
 
-		<div>
-			<label class="block text-sm font-medium text-gray-700">Country</label>
-			<input
-				type="text"
-				bind:value={formData.country}
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-			/>
-		</div>
+				<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+					<div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4">
+						<label class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Name</label>
+						<div class="mt-1 sm:col-span-2 sm:mt-0">
+							<input
+								type="text"
+								bind:value={formData.name}
+								class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+							/>
+						</div>
+					</div>
 
-		<div>
-			<label class="block text-sm font-medium text-gray-700">Issue</label>
-			<textarea
-				bind:value={formData.issue}
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-			></textarea>
-		</div>
+					<div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4">
+						<label class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Country</label>
+						<div class="mt-1 sm:col-span-2 sm:mt-0">
+							<input
+								type="text"
+								bind:value={formData.country}
+								class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+							/>
+						</div>
+					</div>
 
-		<div>
-			<label class="block text-sm font-medium text-gray-700">Location</label>
-			<input
-				type="text"
-				bind:value={formData.location}
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-			/>
-		</div>
+					<div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4">
+						<label class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Location</label>
+						<div class="mt-1 sm:col-span-2 sm:mt-0">
+							<input
+								type="text"
+								bind:value={formData.location}
+								class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+							/>
+						</div>
+					</div>
 
-		<div>
-			<label class="block text-sm font-medium text-gray-700">Emergency Level</label>
-			<select
-				bind:value={formData.emergencyLevel}
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-			>
-				{#each emergencyLevels as level}
-					<option value={level}>{level}</option>
-				{/each}
-			</select>
-		</div>
+					<div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4">
+						<label class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+							>Contact Type</label
+						>
+						<div class="mt-1 sm:col-span-2 sm:mt-0">
+							<select
+								bind:value={formData.contactType}
+								class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+							>
+								<option value="" disabled selected>Select contact type</option>
+								{#each contactTypes as type}
+									<option value={type}>{type}</option>
+								{/each}
+							</select>
+						</div>
+					</div>
 
-		<div>
-			<label class="block text-sm font-medium text-gray-700">Contact Type</label>
-			<select
-				bind:value={formData.contactType}
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-			>
-				{#each contactTypes as type}
-					<option value={type}>{type}</option>
-				{/each}
-			</select>
-		</div>
+					<div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4">
+						<label class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+							>Contact Value</label
+						>
+						<div class="mt-1 sm:col-span-2 sm:mt-0">
+							<input
+								type="text"
+								bind:value={formData.contactValue}
+								class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
 
-		<div>
-			<label class="block text-sm font-medium text-gray-700">Violence Type</label>
-			<select
-				bind:value={formData.violenceType}
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-			>
-				{#each violenceTypes as type}
-					<option value={type}>{type}</option>
-				{/each}
-			</select>
-		</div>
+			<!-- Incident Details Section -->
+			<div class="mb-4 border-b border-gray-200 pb-4">
+				<h2 class="mb-4 text-lg font-medium text-gray-700">Incident Details</h2>
 
-		<div>
-			<label class="block text-sm font-medium text-gray-700">Contact Value</label>
-			<input
-				type="text"
-				bind:value={formData.contactValue}
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-			/>
-		</div>
+				<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+					<div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4">
+						<label class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+							>Emergency Level</label
+						>
+						<div class="mt-1 sm:col-span-2 sm:mt-0">
+							<select
+								bind:value={formData.emergencyLevel}
+								class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+							>
+								<option value="" disabled selected>Select emergency level</option>
+								{#each emergencyLevels as level}
+									<option value={level}>{level.charAt(0).toUpperCase() + level.slice(1)}</option>
+								{/each}
+							</select>
+						</div>
+					</div>
 
-		<div>
-			<button
-				type="submit"
-				class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-			>
-				{#if loading}
-					<span>Loading...</span>
-				{:else}
-					<span>Create Report</span>
-				{/if}
-			</button>
-		</div>
-	</form>
+					<div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4">
+						<label class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+							>Violence Type</label
+						>
+						<div class="mt-1 sm:col-span-2 sm:mt-0">
+							<select
+								bind:value={formData.violenceType}
+								class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+							>
+								<option value="" disabled selected>Select violence type</option>
+								{#each violenceTypes as type}
+									<option value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
+								{/each}
+							</select>
+						</div>
+					</div>
+
+					<div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 md:col-span-2">
+						<label class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+							>Issue Description</label
+						>
+						<div class="mt-1 sm:col-span-2 sm:mt-0">
+							<textarea
+								bind:value={formData.issue}
+								rows="4"
+								class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+								placeholder="Describe the issue in detail..."
+							></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="mt-6 flex justify-end">
+				<button
+					type="button"
+					class="mr-3 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+					on:click={() => goto('/dashboard/reports')}
+				>
+					Cancel
+				</button>
+				<button
+					type="submit"
+					class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+					disabled={loading}
+				>
+					{#if loading}
+						<span class="flex items-center">
+							<svg
+								class="-ml-1 mr-2 h-4 w-4 animate-spin text-white"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
+								<circle
+									class="opacity-25"
+									cx="12"
+									cy="12"
+									r="10"
+									stroke="currentColor"
+									stroke-width="4"
+								></circle>
+								<path
+									class="opacity-75"
+									fill="currentColor"
+									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+								></path>
+							</svg>
+							Processing...
+						</span>
+					{:else}
+						<span>Create Report</span>
+					{/if}
+				</button>
+			</div>
+		</form>
+	</div>
 </div>
